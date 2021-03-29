@@ -35,7 +35,8 @@ loop_over_posts()
     for j in $(ls $1); do
         post="$(echo $j | awk '{ print substr( $0, 1, length($0)-3)}')"
         if $3; then
-            echo "<a href="$post.html">$post</a>" >> $index
+            name=$(echo $post | sed "s,-, ,")
+            echo "<a href="$post.html">$name</a>" >> $index
         fi
         generate_post $1 $post
     done
@@ -46,6 +47,7 @@ loop_over_posts()
 generate_post()
 {
     echo "creating page: $2"
+
     output="$dst/$2.html"
     sed -e "s,TITLE,$TITLE :: $2,g" \
         -e "s,URL,$URL/$2,g" templates/head.html > $output

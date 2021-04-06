@@ -19,7 +19,7 @@ Then it hit me: Linux was more than capable of rendering markdown into HTML with
 ### Introducing dead simple static site generator
 
 As the name suggests, my proposed solution to this problem is dead simple.
-dsssg uses nothing but the Linux shell and Make.
+dsssg uses nothing but the Linux shell and Make to create html files using templates for the header and footer.
 If you’d like to check out the script, feel free to do so on my [github page](https://github.com/orioncrocker/dsssg).
 Now the server can simply deliever html files direct to the user's browser without having to render anything beforehand.
 

@@ -2,7 +2,9 @@
 April 5th, 2021
 
 Currently seeking employment in the greater San Diego area, but I'm open to work remotely.
-If you are looking to hire a junior programmer or know someone who is, start a conversation with me at [orion@orionc.dev](mailto:orion@orionc.dev).
+If you are looking to hire a software developer or know someone who is, start a conversation with me at [orion@orionc.dev](mailto:orion@orionc.dev).
+
+Here's my most [up-to-date resume](/files/Orion_Crocker_Resume.pdf) if you're interested.
 
 As of April 22nd, I have satisfied all requirements for a Bachelor's in Computer Science at Portland State.
 I expect to recieve my incredibly expensive piece of paper in the mail sometime in early June.

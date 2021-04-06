@@ -113,3 +113,7 @@ By blocking all other ports except for the ones you are using, you help reduce t
 check that it’s running correctly
 
 	ufw status
+
+And there you have it!
+Your server should be a lot more secure now.
+Remember to periodically check logs and monitor your server to keep it healthy and happy.

@@ -1,12 +1,17 @@
 #!/usr/bin/make -f
 
+include config
+
 .PHONY: help build clean deploy
 
 help:
-	$(info make build|clean|deploy)
+	$(info make build|clean|remote)
+
+deploy:
+		rsync -ahvuz -e 'ssh -p $(PORT)' dst/ orion@$(REMOTE):sites/orionc.dev
 
 clean:
-	rm -r dst
+	    rm -r dst
 
 build:
-	sh generate.sh
+	    sh generate.sh

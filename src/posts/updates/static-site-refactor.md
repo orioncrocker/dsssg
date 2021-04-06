@@ -25,4 +25,4 @@ If you’d like to check out the script, feel free to do so on my [github page](
 Current bugs / known issues:
 
 - Blog posts are displayed alphabetically rather than by date submitted
-- No proper 404 page ([fixed!](/some-page-that-doesnt-exist) 04/05/2021)
+- No proper 404 page ([fixed!](/some-page-that-doesnt-exist) 04/06/2021)

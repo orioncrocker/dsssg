@@ -21,9 +21,8 @@ Then it hit me: Linux was more than capable of rendering markdown into HTML with
 As the name suggests, my proposed solution to this problem is dead simple.
 dsssg uses nothing but the Linux shell and Make to create html files using templates for the header and footer.
 If you’d like to check out the script, feel free to do so on my [github page](https://github.com/orioncrocker/dsssg).
-Now the server can simply deliever html files direct to the user's browser without having to render anything beforehand.
 
 Current bugs / known issues:
 
-- Blog posts are displayed alphabetically rather than by date
-- No proper 404 page
+- Blog posts are displayed alphabetically rather than by date submitted
+- No proper 404 page ([fixed!](/some-page-that-doesnt-exist) 04/05/2021)

@@ -1,4 +1,4 @@
-# Secure your SSH connection
+# Secure your SSH server
 
 An SSH connection is kind of like a fire: it needs three ingredients in order to survive.
 Take any one of those three away, and the whole thing ceases to be.

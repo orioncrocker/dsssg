@@ -10,7 +10,9 @@ I expect to recieve my incredibly expensive piece of paper in the mail sometime 
 Current project list:
 
 1. Gainful employment
-2. Improve and add content to this website
-3. [Albumartdb.com](https://albumartdb.com) (coming soon!)
-4. Maintaining my 300 sqft garden
+2. [Albumartdb.com](https://www.albumartdb.com) (coming soon!)
+3. Improve and add content to this website
+4. Maintaining my 300 square foot garden
 5. Make 2021 better than 2020
+
+This page was inspired by [nownownow.com](https://www.nownownow.com).

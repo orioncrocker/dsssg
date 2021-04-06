@@ -1,6 +1,6 @@
-# About Me
+![headshot](/images/headshot.png)
 
-![headshot](/data/images/headshot.png)
+# About Me
 
 Hello! Welcome to my website.
 

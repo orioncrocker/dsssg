@@ -1,5 +1,5 @@
 # What I'm doing now
-April 5th, 2021
+As of April 5th, 2021:
 
 Currently seeking employment in the greater San Diego area, but I'm open to work remotely.
 If you are looking to hire a software developer or know someone who is, start a conversation with me at [orion@orionc.dev](mailto:orion@orionc.dev).
@@ -14,7 +14,7 @@ Current project list:
 1. Gainful employment
 2. [Albumartdb.com](https://www.albumartdb.com) (coming soon!)
 3. Improve and add content to this website
-4. Maintaining my 300 square foot garden
+4. Maintain my 300 square foot garden
 5. Make 2021 better than 2020
 
 This page was inspired by [nownownow.com](https://www.nownownow.com).

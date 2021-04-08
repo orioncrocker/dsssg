@@ -1,19 +1,17 @@
 # Secure your SSH server
 
-An SSH connection is kind of like a fire: it needs three ingredients in order to survive.
-Take any one of those three away, and the whole thing ceases to be.
-In the case of a remote SSH server, any user can connect to it as long as they have the following three bits of data:
+In order to connect to a remote SSH server, users need the following three bits of data:
 
-1. Username
-2. Password
+1. Valid username
+2. Correct password
 3. The port SSH is using
 
-Remove any of those three and the server becomes infinitely more secure from brute-force style attacks.
-Sometimes these can originate from the other side of the planet (which is kind of neat).
+If you as the server admin is able to obfuscate any of these three items, your server becomes infinitely more secure from brute-force style attacks.
+Sometimes the attacking IP addresses are from the other side of the planet (which is kind of neat).
 
 ![hong kong](/images/hongkong.png)
 
-If your currently running a machine that hosts an SSH server, run the following command to see if your machine is being targeted.
+If you're currently running a machine that hosts an SSH server, run the following command to see if your machine is being targeted.
 Here’s an example of what happens to the machine hosting this website roughly every minute.
 
 	grep ‘Invalid’ /var/log/auth.log
@@ -28,9 +26,8 @@ Here’s an example of what happens to the machine hosting this website roughly 
 	Invalid user visiteur from 59.152.237.118 port 46436
 	Invalid user aaaaa from 103.212.120.87 port 58578
 
-This kind of attack is especially effective on machines with default parameters such as `admin` and `password`, or in the case of default raspberry pis, `pi` and `rapsberry`.
 Clearly, there are a LOT Of machines attempting to beat down the door and get inside.
-As you can see, none of them really have a clue as to which username or port to specify, almost every connection attempt is effectively throwing data at a wall and hoping something will stick.
+As you can see, none of them really have a clue as to which username, password, or port to specify, almost every connection attempt is effectively throwing data at a wall and hoping something will stick.
 Eventually, given enough time, something might.
 Thankfully, you can have peace of mind by following a few of these simple steps.
 
@@ -45,13 +42,14 @@ After the key is created on your local machine, copy it to your remote machine.
 
 Once the server has your home machine’s key, you can remove the ability to log in via a password.
 Be warned though, if you lose your key on your local machine for whatever reason you won’t be able to get back into your remote server.
-Because of this, I would recommend that newer users have a [complicated password](http://password-checker.online-domain-tools.com/) as a backup in addition to an SSH key in the case of an emergency.
+Instead, you'll need to give the server another key.
+It's good practice to remove old keys that aren't being used, as keeping the orphaned keys around is a [security risk](https://www.csoonline.com/article/3196974/unmanaged-orphaned-ssh-keys-remain-a-serious-enterprise-risks.html).
 
 By default, SSH communicates using port 22.
 One of the best ways to secure your connection is to change it.
 Pick an alternate one to use, but be aware that a lot of ports are already [used by other services](https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers#Well-known_ports).
 
-Once you’ve picked one out, edit `/etc/ssh/sshd_config` and modify the following lines:
+Once you’ve picked one out, edit `/etc/ssh/sshd_config` on your remote server and modify the following lines:
 
 	Port $your_port
 	PermitRootLogin no
@@ -62,7 +60,21 @@ Once you’ve picked one out, edit `/etc/ssh/sshd_config` and modify the followi
     PermitEmptyPasswords no
     PrintLastLog yes
 
-### Ban the intruders
+Only users specified in the 'AllowUsers' section will be allowed to connect, all others will be automatically denied.
+
+Restart your SSH instance to enact the changes and exit the server.
+
+    systemctl restart sshd
+    exit
+
+Now connect to your server with the `-p` flag to specify the port.
+
+    ssh -p $your_port username@domain
+
+Your server is now more secure than when it started, but there are a few more things we can do to improve security.
+
+
+## Ban the intruders
 
 Now that all three connection requirements have been secured, it’s important to be able to ban the IP addresses who are attempting brute force attacks.
 
@@ -100,7 +112,7 @@ After a few hours, run `grep 'banned' /var/log/fail2ban.log` to see the fruits o
     WARNING [sshd] 153.36.233.60 already banned
     WARNING [sshd] 114.141.167.190 already banned
 
-### Set up a firewall
+## Set up a firewall
 
 ufw is a firewall application for linux.
 By blocking all other ports except for the ones you are using, you help reduce the vector of attacks from the outside.

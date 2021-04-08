@@ -13,14 +13,13 @@ build()
 {
     cp src/*.css $dst
     cp src/robots.txt $dst
-    cp -r src/data $dst
+    cp -r src/data/* $dst
     sed -e "s,TITLE,$TITLE,g" \
         -e "s,URL,$URL,g" templates/head.html > $index
     cat templates/header.html >> $index
-
-    for i in $(ls $POSTS); do
-        echo "<h3>$i</h3>" >> $index
-        loop_over_posts $POSTS/$i $i true
+    for dir in $(ls $POSTS); do
+        echo "<h3>$dir</h3>" >> $index
+        loop_over_posts $POSTS/$dir $dir true
     done
 
     cat templates/footer.html >> $index
@@ -29,24 +28,35 @@ build()
 
 # $1 path
 # $2 directory name
-# $3 add post to index
+# $3 (true/false) add post to index
 loop_over_posts()
 {
-    for j in $(ls $1); do
-        post="$(echo $j | awk '{ print substr( $0, 1, length($0)-3)}')"
-        if $3; then
-            name=$(echo $post | sed "s,-, ,")
-            echo "<a href="$post.html">$name</a>" >> $index
-        fi
-        generate_post $1 $post
+    touch sorted_posts
+    for i in $(ls $1); do
+        date=$(git log -n 1 --diff-filter=A --date="format:%x" --pretty=format:'%ad%n' -- $1/$i)
+        echo "$date :: $i" >> sorted_posts
     done
+    sort -ru sorted_posts > sorted
+
+    echo '<ul>' >> $index
+    while read post; do
+        post_name="$(echo $post | cut -c 14- | rev | cut -c 4- | rev)"
+        if $3; then
+            post_date="$(echo $post | cut -c 1-14)"
+            echo "<li> $post_date <a href="$post_name">$post_name</a>" >> $index
+        fi
+        generate_post $1 $post_name
+    done < sorted
+    echo '</ul>' >> $index
+    rm sorted_posts
+    rm sorted
 }
 
 # $1 path
 # $2 file name
 generate_post()
 {
-    echo "creating page: $2"
+    echo "creating page: $2.html"
 
     output="$dst/$2.html"
     sed -e "s,TITLE,$TITLE :: $2,g" \

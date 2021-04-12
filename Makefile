@@ -8,10 +8,10 @@ help:
 	$(info make build|clean|remote)
 
 deploy:
-		rsync -ahvuz -e 'ssh -p $(PORT)' dst/ orion@$(REMOTE):sites/orionc.dev
+		rsync -ahvuz dst/ $(USERNAME)@$(REMOTE):$(DESTINATION)
 
 clean:
 	    rm -r dst
 
 build:
-	    sh generate.sh
+	    sh build.sh

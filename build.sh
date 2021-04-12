@@ -2,9 +2,9 @@
 
 # Dead simple static site generator
 
-TITLE="orionc.dev"
+TITLE="yourwebsitetitle"
 POSTS=src/posts
-URL='https://orionc.dev'
+URL='https://yourwebsitedomain.com'
 NAV=src/nav
 dst=dst
 index="$dst/index.html"
@@ -23,7 +23,6 @@ build()
     done
 
     cat templates/footer.html >> $index
-    loop_over_posts $NAV nav false
 }
 
 # $1 path

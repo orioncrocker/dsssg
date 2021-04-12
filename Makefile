@@ -1,6 +1,8 @@
 #!/usr/bin/make -f
 
-include config
+USERNAME=''
+REMOTE=''
+DESTINATION=''
 
 .PHONY: help build clean deploy
 

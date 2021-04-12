@@ -2,14 +2,14 @@
 
 # Dead simple static site generator
 
-TITLE="yourwebsitetitle"
+TITLE="websitetitle"
 POSTS=src/posts
-URL='https://yourwebsitedomain.com'
+URL='https://websitedomain.com'
 NAV=src/nav
 dst=dst
 index="$dst/index.html"
 
-build()
+build_site()
 {
     cp src/*.css $dst
     cp src/robots.txt $dst
@@ -19,16 +19,17 @@ build()
     cat templates/header.html >> $index
     for dir in $(ls $POSTS); do
         echo "<h3>$dir</h3>" >> $index
-        loop_over_posts $POSTS/$dir $dir true
+        discover_posts $POSTS/$dir $dir true
     done
 
     cat templates/footer.html >> $index
+    discover_posts $NAV nav false
 }
 
 # $1 path
 # $2 directory name
 # $3 (true/false) add post to index
-loop_over_posts()
+discover_posts()
 {
     touch sorted_posts
     for i in $(ls $1); do
@@ -47,6 +48,7 @@ loop_over_posts()
         generate_post $1 $post_name
     done < sorted
     echo '</ul>' >> $index
+
     rm sorted_posts
     rm sorted
 }
@@ -66,4 +68,4 @@ generate_post()
 }
 
 mkdir -p $dst
-build;
+build_site;

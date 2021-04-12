@@ -1,8 +1,20 @@
 # This is a test post
 
-Here post contains a few examples of how Markdown is rendered into HTML
+Here post contains a few examples of how Markdown is rendered into HTML. 
 
-## Code blocks:
+To learn more visit <https://www.markdownguide.org/cheat-sheet>
+
+**This text is bold**.
+
+*This text is italicized*.
+
+> This text is blockquoted
+
+### Image test:
+
+![cash-money](/images/godzilla.png)
+
+### Code blocks:
 
 To hear Tux's words of wisdom on your Linux machine at home:
 
@@ -24,17 +36,3 @@ Output:
         (|     | )
         /'\_   _/`\
         \___)=(___/
-
-# This creates another "title"
-
-**This text is bold**.
-
-*This text is italicized*.
-
-> This text is blockquoted?
-
-### Image test:
-
-![Tux](/images/godzilla.png)
-
-Link test: <https://www.markdownguide.org/cheat-sheet>

@@ -22,6 +22,9 @@
     --highlight-bg: #403e41;      /* Highlighted background */
     --highlight-fg: #fcfcfa;      /* Highlighted text */
     --inactive: #939293;          /* Inactive text */
+
+    /* Code block colors */
+    --code-bg: #272822;  /* Slightly darker than the main background */
 }
 
 /* Reset and Base Styles */
@@ -77,6 +80,7 @@ pre, code {
     border-radius: 3px;
     overflow-x: auto;
     margin: 1rem 0;
+    border: 1px solid var(--border); /* Add border */
 }
 
 code {
@@ -278,6 +282,39 @@ nav ul li a:hover {
 
 .post-content li {
     margin-bottom: 0.5rem;  /* Add space between list items */
+}
+
+/* Style for code blocks */
+.post-content pre,
+.post-excerpt pre {
+    background-color: var(--code-bg);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid var(--border); /* Add border */
+}
+
+/* Style for inline code */
+.post-content code,
+.post-excerpt code {
+    font-family: "Courier New", Courier, monospace;
+    background-color: var(--code-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    border: 1px solid var(--border); /* Add border */
+    font-size: 0.9em;
+    color: var(--blue);
+}
+
+/* Make sure code inside pre doesn't have double borders */
+.post-content pre code,
+.post-excerpt pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    color: var(--foreground);
 }
 
 /* Also fix alignment in post excerpts */

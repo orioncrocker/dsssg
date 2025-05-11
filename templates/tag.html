@@ -42,7 +42,7 @@
                 {% endif %}
             </div>
             <div class="post-excerpt">
-                {{ post.content|striptags|safe_truncate(600)|safe }}
+                {{ post.content|striptags|safe_truncate()|safe }}
             </div>
             <a href="{{ post.url }}" class="read-more">Read more</a>
         </article>

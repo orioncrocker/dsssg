@@ -147,7 +147,7 @@ def build_site():
             return date_value.strftime(format_string)
         return date_value
     
-    def safe_html_truncate(html_content, length=500):
+    def safe_html_truncate(html_content, length=700):
         """
         Safely truncate HTML content to approximately 'length' characters
         while preserving valid HTML structure and code blocks

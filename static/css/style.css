@@ -1,3 +1,29 @@
+/* Updated colors to match Monokai Pro scheme */
+/* Only changing colors, keeping all other styles the same */
+
+/* Variables for Monokai Pro colors */
+:root {
+    /* Main Monokai Pro Colors */
+    --background: #2d2a2e;        /* Background */
+    --foreground: #fcfcfa;        /* Main text */
+    --comment: #727072;           /* Comments/subdued text */
+    --selection: #444267;         /* Selection background */
+    
+    /* Accent colors */
+    --red: #ff6188;               /* Keywords, operators */
+    --orange: #fc9867;            /* Constants, attributes */
+    --yellow: #ffd866;            /* Strings, values */
+    --green: #a9dc76;             /* Functions, methods */
+    --blue: #78dce8;              /* Classes, types */
+    --purple: #ab9df2;            /* Special keywords */
+    
+    /* UI colors */
+    --border: #444444;            /* Borders, dividers */
+    --highlight-bg: #403e41;      /* Highlighted background */
+    --highlight-fg: #fcfcfa;      /* Highlighted text */
+    --inactive: #939293;          /* Inactive text */
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -8,8 +34,8 @@
 body {
     font-family: "Courier New", Courier, monospace;
     line-height: 1.6;
-    color: #cccccc;
-    background-color: #111111;
+    color: var(--foreground);
+    background-color: var(--background);
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
@@ -19,7 +45,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
     margin-bottom: 1rem;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 h1 {
@@ -36,7 +62,7 @@ p {
 }
 
 a {
-    color: #00ff00;
+    color: var(--blue);
     text-decoration: none;
 }
 
@@ -46,7 +72,7 @@ a:hover {
 
 pre, code {
     font-family: "Courier New", Courier, monospace;
-    background-color: #222222;
+    background-color: var(--highlight-bg);
     padding: 0.5rem;
     border-radius: 3px;
     overflow-x: auto;
@@ -60,7 +86,7 @@ code {
 /* Header and Navigation */
 header {
     margin-bottom: 2rem;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 1rem;
 }
 
@@ -79,12 +105,13 @@ nav ul {
 }
 
 nav ul li a {
-    color: #00ff00;
+    color: var(--blue);
     text-decoration: none;
     padding: 0.25rem 0;
 }
 
 nav ul li a:hover {
+    color: var(--green);
     text-decoration: underline;
 }
 
@@ -109,8 +136,8 @@ nav ul li a:hover {
 
 /* Post Summary */
 .post-summary {
-    background-color: #222222;
-    border-left: 2px solid #00ff00;
+    background-color: var(--highlight-bg);
+    border-left: 2px solid var(--green);
     padding: 1rem;
     margin-bottom: 1.5rem;
 }
@@ -122,16 +149,16 @@ nav ul li a:hover {
 }
 
 .post-summary h3 a {
-    color: #ffffff;
+    color: var(--yellow);
 }
 
 .post-summary h3 a:hover {
-    color: #00ff00;
+    color: var(--green);
 }
 
 .post-meta {
     font-size: 0.9rem;
-    color: #888888;
+    color: var(--inactive);
     margin-bottom: 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -140,12 +167,12 @@ nav ul li a:hover {
 }
 
 .post-meta time {
-    color: #00ff00;
+    color: var(--blue);
 }
 
 .post-meta::before {
     content: ":: ";
-    color: #00ff00;
+    color: var(--orange);
 }
 
 /* Tags */
@@ -158,29 +185,32 @@ nav ul li a:hover {
 .tag {
     display: inline-flex;
     align-items: center;
-    background-color: #333333;
-    color: #00ff00;
+    background-color: var(--selection);
+    color: var(--blue);
     padding: 0.2rem 0.5rem;
-    border-radius: 0;
+    border-radius: 3px;
     font-size: 0.8rem;
     text-decoration: none;
-    border: 1px solid #444444;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
 }
 
 .tag:hover {
-    background-color: #444444;
-    color: #ffffff;
+    background-color: var(--highlight-bg);
+    color: var(--green);
+    border-color: var(--green);
 }
 
 .tag.active {
-    background-color: #00ff00;
-    color: #000000;
+    background-color: var(--green);
+    color: var(--background);
+    border-color: var(--green);
 }
 
 /* Post Content */
 .post-excerpt {
     margin-bottom: 1rem;
-    color: #aaaaaa;
+    color: var(--foreground);
 }
 
 .post-excerpt p {
@@ -189,29 +219,31 @@ nav ul li a:hover {
 
 .read-more {
     display: inline-block;
-    color: #00ff00;
+    color: var(--orange);
     text-decoration: none;
 }
 
 .read-more::after {
     content: " >>";
+    color: var(--orange);
 }
 
 .read-more:hover {
+    color: var(--yellow);
     text-decoration: underline;
 }
 
 /* Single Post */
 .post {
-    background-color: #222222;
-    border-left: 2px solid #00ff00;
+    background-color: var(--highlight-bg);
+    border-left: 2px solid var(--green);
     padding: 1.5rem;
 }
 
 .post-header {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid var(--border);
 }
 
 .post-content {
@@ -229,40 +261,28 @@ nav ul li a:hover {
 .post-content h3,
 .post-content h4 {
     margin: 1.5rem 0 1rem;
-    color: #00ff00;
+    color: var(--yellow);
 }
 
 .post-content img {
     max-width: 100%;
     height: auto;
-    border: 1px solid #333333;
-}
-
-.post-content pre {
-    background-color: #1a1a1a;
-    border: 1px solid #333333;
-}
-
-.post-content code {
-    font-family: "Courier New", Courier, monospace;
-    background-color: #1a1a1a;
-    padding: 0.2rem 0.4rem;
-    color: #00ff00;
-}
-
-.post-footer {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #333333;
+    border: 1px solid var(--border);
 }
 
 /* Related Posts */
+.post-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
 .related-posts {
     margin-top: 2rem;
 }
 
 .related-posts h3 {
-    color: #00ff00;
+    color: var(--yellow);
     margin-bottom: 1rem;
 }
 
@@ -280,12 +300,12 @@ nav ul li a:hover {
     content: ">>";
     position: absolute;
     left: 0;
-    color: #00ff00;
+    color: var(--orange);
 }
 
 .related-posts small {
     display: block;
-    color: #888888;
+    color: var(--inactive);
     margin-top: 0.25rem;
     margin-left: 1rem;
 }
@@ -298,15 +318,15 @@ nav ul li a:hover {
 .tag-header {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid var(--border);
 }
 
 .tag-header h1 {
-    color: #00ff00;
+    color: var(--yellow);
 }
 
 .tag-description {
-    color: #aaaaaa;
+    color: var(--inactive);
     margin-top: 0.5rem;
 }
 
@@ -314,8 +334,8 @@ nav ul li a:hover {
 footer {
     margin-top: 3rem;
     padding-top: 1rem;
-    border-top: 1px solid #333333;
-    color: #666666;
+    border-top: 1px solid var(--border);
+    color: var(--comment);
     font-size: 0.8rem;
 }
 

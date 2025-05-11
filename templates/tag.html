@@ -6,10 +6,10 @@
 {% block content %}
 <section class="tag-archive">
     <header class="tag-header" {% if tag.color %}style="border-color: {{ tag.color }};"{% endif %}>
-        <h1>
+        <h3>
             {% if tag.icon %}<span class="icon large-icon" {% if tag.color %}style="color: {{ tag.color }};"{% endif %}>{{ tag.icon }}</span>{% endif %}
             Posts tagged with "{{ tag.display_name }}"
-        </h1>
+        </h3>
         
         {% if tag.description %}
         <div class="tag-description">
@@ -24,7 +24,7 @@
     
     <div class="post-list">
         {% for post in posts %}
-        <article class="post-card" {% if tag.color %}style="border-left: 4px solid {{ tag.color }};"{% endif %}>
+        <article class="post-summary" {% if tag.color %}style="border-left: 4px solid {{ tag.color }};"{% endif %}>
             <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
             <div class="post-meta">
                 <time datetime="{{ post.date|date('c') }}">{{ post.date|date(site.date_format) }}</time>
@@ -42,7 +42,7 @@
                 {% endif %}
             </div>
             <div class="post-excerpt">
-                {{ post.content|striptags|truncate(150) }}
+                {{ post.content|striptags|truncate(500) }}
             </div>
             <a href="{{ post.url }}" class="read-more">Read more</a>
         </article>

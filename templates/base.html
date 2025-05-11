@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ site.site_title }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ site.site_description }}{% endblock %}">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=1.0.1">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -13,11 +13,8 @@
         <div class="container">
             <h1><a href="/">{{ site.site_title }}</a></h1>
             <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/tags.html">Tags</a></li>
-                    <li><a href="/about.html">About</a></li>
-                </ul>
+                <a href="/tags.html">Tags</a>
+                <a href="/about.html">About</a>
             </nav>
         </div>
     </header>

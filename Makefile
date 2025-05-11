@@ -13,10 +13,11 @@ deploy:
 	rsync -ahvuz dst/ $(USERNAME)@$(REMOTE):$(DESTINATION)
 
 clean:
-	rm -r dst
+	rm -r site
 
 build:
-	sh build.sh
+	python3 build.py
 
 local:
 	sudo rsync -auvt site/* /var/www/html
+	sudo rsync -auvt static /var/www/html

@@ -134,7 +134,7 @@ def build_site():
     """Build the site with tag support"""
     # Set up Jinja2 template environment
     env = Environment(loader=FileSystemLoader(CONFIG['template_dir']))
-    
+
     # Add custom filters
     def date_filter(date_value, format_string="%Y-%m-%d"):
         """Format a date using strftime"""
@@ -147,8 +147,194 @@ def build_site():
             return date_value.strftime(format_string)
         return date_value
     
-    env.filters['date'] = date_filter
+    def safe_html_truncate(html_content, length=500):
+        """
+        Safely truncate HTML content to approximately 'length' characters
+        while preserving valid HTML structure and code blocks
+        """
+        from html.parser import HTMLParser
+        import re
+        
+        # Pre-process to handle markdown code blocks that might not be in HTML yet
+        # Protect code blocks with special markers
+        protected_content = html_content
+        
+        # First, handle fenced code blocks ```code``` and preserve them
+        code_block_pattern = r'```(?:[a-zA-Z0-9]+)?\n(.*?)\n```'
+        code_blocks = []
+        
+        def save_code_block(match):
+            code_blocks.append(match.group(0))
+            return f"CODE_BLOCK_PLACEHOLDER_{len(code_blocks) - 1}"
+        
+        protected_content = re.sub(code_block_pattern, save_code_block, protected_content, flags=re.DOTALL)
+        
+        # Then, handle inline code `code` and preserve them
+        inline_code_pattern = r'`([^`]+)`'
+        inline_codes = []
+        
+        def save_inline_code(match):
+            inline_codes.append(match.group(0))
+            return f"INLINE_CODE_PLACEHOLDER_{len(inline_codes) - 1}"
+        
+        protected_content = re.sub(inline_code_pattern, save_inline_code, protected_content)
+        
+        class HTMLTruncator(HTMLParser):
+            def __init__(self, max_length):
+                super().__init__()
+                self.reset()
+                self.max_length = max_length
+                self.char_count = 0
+                self.output = []
+                self.open_tags = []
+                self.truncated = False
+                self.in_pre = False
+                self.in_code = False
+                
+            def handle_starttag(self, tag, attrs):
+                if self.truncated:
+                    return
+                
+                # Skip certain tags that might cause issues
+                if tag in ('script', 'style', 'iframe'):
+                    return
+                
+                # Track if we're in a code or pre element
+                if tag == 'pre':
+                    self.in_pre = True
+                elif tag == 'code':
+                    self.in_code = True
+                
+                self.open_tags.append(tag)
+                attrs_str = " ".join(f'{name}="{value}"' for name, value in attrs)
+                self.output.append(f"<{tag}{' ' + attrs_str if attrs_str else ''}>")
+                
+            def handle_endtag(self, tag):
+                if self.truncated:
+                    return
+                
+                # Skip certain tags
+                if tag in ('script', 'style', 'iframe'):
+                    return
+                
+                # Track if we're leaving a code or pre element
+                if tag == 'pre':
+                    self.in_pre = False
+                elif tag == 'code':
+                    self.in_code = False
+                
+                # Remove matching open tag
+                if tag in self.open_tags:
+                    self.open_tags.remove(tag)
+                
+                self.output.append(f"</{tag}>")
+                
+            def handle_data(self, data):
+                if self.truncated:
+                    return
+                
+                # Check if this is a code block placeholder
+                code_block_match = re.match(r'CODE_BLOCK_PLACEHOLDER_(\d+)', data)
+                if code_block_match:
+                    # This is a code block placeholder, replace it with the actual code
+                    index = int(code_block_match.group(1))
+                    if index < len(code_blocks):
+                        # For code blocks, we count them as a fixed number of characters
+                        # to avoid them taking up the entire excerpt
+                        code_chars = 50  # Count code blocks as 50 chars regardless of actual length
+                        
+                        if self.char_count + code_chars <= self.max_length:
+                            # We can include a shortened version of this code block
+                            code_preview = code_blocks[index]
+                            # Limit the code block to a reasonable preview
+                            if len(code_preview) > 100:
+                                code_lines = code_preview.split('\n')
+                                if len(code_lines) > 3:
+                                    code_preview = '\n'.join(code_lines[:3]) + '\n...'
+                            
+                            self.output.append(code_preview)
+                            self.char_count += code_chars
+                        else:
+                            # Not enough space for the code block
+                            self.truncated = True
+                    return
+                
+                # Check if this is an inline code placeholder
+                inline_code_match = re.match(r'INLINE_CODE_PLACEHOLDER_(\d+)', data)
+                if inline_code_match:
+                    index = int(inline_code_match.group(1))
+                    if index < len(inline_codes):
+                        code = inline_codes[index]
+                        # For inline code, count the actual length
+                        if self.char_count + len(code) <= self.max_length:
+                            self.output.append(code)
+                            self.char_count += len(code)
+                        else:
+                            # Not enough space for the inline code
+                            self.truncated = True
+                    return
+                
+                # Count only visible characters
+                data_length = len(data)
+                remaining = self.max_length - self.char_count
+                
+                if remaining <= 0:
+                    self.truncated = True
+                    return
+                    
+                if data_length > remaining:
+                    # If we're in a code block, don't split in the middle
+                    if self.in_pre or self.in_code:
+                        self.truncated = True
+                        return
+                    
+                    # Cut at word boundary if possible
+                    words = data[:remaining + 50].split()
+                    partial_data = ' '.join(words[:-1]) if len(words) > 1 else words[0][:remaining]
+                    
+                    if partial_data:
+                        self.output.append(partial_data + '...')
+                    else:
+                        self.output.append(data[:remaining] + '...')
+                    
+                    self.char_count += len(partial_data)
+                    self.truncated = True
+                else:
+                    self.output.append(data)
+                    self.char_count += data_length
+            
+            def get_truncated_html(self):
+                output_str = ''.join(self.output)
+                
+                # Close any remaining open tags
+                for tag in reversed(self.open_tags):
+                    output_str += f'</{tag}>'
+                    
+                return output_str
+        
+        # Remove problematic elements before parsing
+        cleaned_html = re.sub(r'<(script|style|iframe).*?</\1>|<head>.*?</head>', '', protected_content, flags=re.DOTALL)
+        
+        truncator = HTMLTruncator(length)
+        truncator.feed(cleaned_html)
+        truncated_html = truncator.get_truncated_html()
+        
+        # Post-process to restore any code placeholders that might still be in the truncated text
+        for i, code in enumerate(code_blocks):
+            placeholder = f"CODE_BLOCK_PLACEHOLDER_{i}"
+            if placeholder in truncated_html:
+                truncated_html = truncated_html.replace(placeholder, code)
+        
+        for i, code in enumerate(inline_codes):
+            placeholder = f"INLINE_CODE_PLACEHOLDER_{i}"
+            if placeholder in truncated_html:
+                truncated_html = truncated_html.replace(placeholder, code)
+        
+        return truncated_html
     
+    env.filters['date'] = date_filter
+    env.filters['safe_truncate'] = safe_html_truncate
+
     # Add current date to templates
     env.globals['now'] = datetime.now()
     

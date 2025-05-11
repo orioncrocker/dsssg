@@ -6,10 +6,10 @@
 <div class="content-wrapper">
     <section class="posts">
         <h2>Recent Posts</h2>
-        
+
         <div class="post-list">
             {% for post in posts %}
-            <article class="post-card">
+            <article class="post-summary">
                 <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
                 <div class="post-meta">
                     <time datetime="{{ post.date|date('c') }}">{{ post.date|date(site.date_format) }}</time>
@@ -25,7 +25,7 @@
                     {% endif %}
                 </div>
                 <div class="post-excerpt">
-                    {{ post.content|striptags|truncate(150) }}
+                    {{ post.content|truncate(600, true, '...')|safe }}
                 </div>
                 <a href="{{ post.url }}" class="read-more">Read more</a>
             </article>
@@ -33,6 +33,7 @@
         </div>
     </section>
 
+    <!-- I don't think I like this thing
     <aside class="sidebar">
         <div class="tags-widget">
             <h3>Tags</h3>
@@ -48,5 +49,7 @@
             </div>
         </div>
     </aside>
+    --!>
+
 </div>
 {% endblock %}

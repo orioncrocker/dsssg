@@ -42,27 +42,6 @@ header h1 a {
     color: #333;
 }
 
-/* Navigation */
-nav ul {
-    display: flex;
-    list-style: none;
-}
-
-nav ul li {
-    margin-left: 1.5rem;
-    position: relative;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #555;
-    font-weight: 500;
-}
-
-nav ul li a:hover {
-    color: #000;
-}
-
 /* Main Content */
 main {
     padding: 2rem 0;
@@ -77,33 +56,28 @@ main {
 
 /* Post List */
 .post-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
     margin-top: 1.5rem;
 }
 
-.post-card {
+.post-summary {
     background-color: #fff;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     padding: 1.5rem;
+    width: 100%;
+    border-left: 4px solid #eee;
+    margin-bottom: 2rem;
 }
 
-.post-card:hover {
-    transform: translateY(-5px);
-}
-
-.post-card h3 {
+.post-summary h3 {
     margin-top: 0;
-    margin-bottom: 0.5rem;
-}
-
-.post-card h3 a {
-    text-decoration: none;
-    color: #333;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
 }
 
 .post-meta {
@@ -198,7 +172,124 @@ main {
 /* Post Excerpts */
 .post-excerpt {
     margin-bottom: 1rem;
-    color: #555;
+    color: #333;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Add styles for common elements in excerpts */
+.post-excerpt p {
+    margin-bottom: 0.75rem;
+}
+
+.post-excerpt ul,
+.post-excerpt ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.post-excerpt li {
+    margin-bottom: 0.25rem;
+}
+
+.post-excerpt strong,
+.post-excerpt b {
+    font-weight: 600;
+}
+
+.post-excerpt em,
+.post-excerpt i {
+    font-style: italic;
+}
+
+.post-excerpt a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.post-excerpt a:hover {
+    text-decoration: underline;
+}
+
+.post-excerpt h2,
+.post-excerpt h3,
+.post-excerpt h4 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.post-excerpt code {
+    font-family: monospace;
+    background-color: #f5f5f5;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.post-excerpt code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    background-color: #f6f8fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: #24292e;
+    white-space: nowrap;
+}
+
+/* Code blocks */
+.post-excerpt pre {
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e1e4e8;
+}
+
+.post-excerpt pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    white-space: pre;
+    font-size: 0.9em;
+    color: #24292e;
+    display: block;
+    line-height: 1.5;
+}
+
+/* For markdown-style code blocks that might get converted differently */
+.post-excerpt pre.highlight,
+.post-excerpt div.highlight {
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e1e4e8;
+}
+
+/* For triple backtick blocks that might still be in markdown format */
+.post-excerpt .language-markdown,
+.post-excerpt .language-javascript,
+.post-excerpt .language-python,
+.post-excerpt .language-css,
+.post-excerpt .language-html {
+    display: block;
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e1e4e8;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* Handle last child to remove bottom margin */
+.post-excerpt > *:last-child {
+    margin-bottom: 0;
 }
 
 .read-more {
@@ -320,6 +411,11 @@ main {
     color: #777;
 }
 
+.nav a {
+    text-align: center;
+    padding-right: 10px;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .content-wrapper {
@@ -344,14 +440,5 @@ main {
     nav {
         margin-top: 1rem;
         width: 100%;
-    }
-    
-    nav ul {
-        flex-direction: column;
-    }
-    
-    nav ul li {
-        margin-left: 0;
-        margin-bottom: 0.5rem;
     }
 }

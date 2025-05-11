@@ -25,7 +25,7 @@
                     {% endif %}
                 </div>
                 <div class="post-excerpt">
-                    {{ post.content|truncate(600, true, '...')|safe }}
+                    {{ post.content|safe_truncate(600)|safe }}
                 </div>
                 <a href="{{ post.url }}" class="read-more">Read more</a>
             </article>

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ site.site_title }} - Home{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="posts">
+        <h2>Recent Posts</h2>
+        
+        <div class="post-list">
+            {% for post in posts %}
+            <article class="post-card">
+                <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+                <div class="post-meta">
+                    <time datetime="{{ post.date|date('c') }}">{{ post.date|date(site.date_format) }}</time>
+                    {% if post.processed_tags %}
+                    <div class="tags">
+                        {% for tag in post.processed_tags %}
+                        <a href="{{ tag.url }}" class="tag" {% if tag.color %}style="background-color: {{ tag.color }}; color: white;"{% endif %}>
+                            {% if tag.icon %}<span class="icon">{{ tag.icon }}</span>{% endif %}
+                            {{ tag.display_name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="post-excerpt">
+                    {{ post.content|striptags|truncate(150) }}
+                </div>
+                <a href="{{ post.url }}" class="read-more">Read more</a>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <aside class="sidebar">
+        <div class="tags-widget">
+            <h3>Tags</h3>
+            <div class="tag-cloud">
+                {% for tag in tags|sort(attribute='count', reverse=true) %}
+                <a href="{{ tag.url }}" class="tag" 
+                   {% if tag.color %}style="background-color: {{ tag.color }}30; color: {{ tag.color }};"{% endif %}
+                   title="{{ tag.count }} posts">
+                    {% if tag.icon %}<span class="icon">{{ tag.icon }}</span>{% endif %}
+                    {{ tag.display_name }} <span class="count">({{ tag.count }})</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </aside>
+</div>
+{% endblock %}

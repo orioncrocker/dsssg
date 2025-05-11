@@ -10,10 +10,13 @@ help:
 	$(info make build|clean|remote)
 
 deploy:
-		rsync -ahvuz dst/ $(USERNAME)@$(REMOTE):$(DESTINATION)
+	rsync -ahvuz dst/ $(USERNAME)@$(REMOTE):$(DESTINATION)
 
 clean:
-	    rm -r dst
+	rm -r dst
 
 build:
-	    sh build.sh
+	sh build.sh
+
+local:
+	sudo rsync -auvt site/* /var/www/html

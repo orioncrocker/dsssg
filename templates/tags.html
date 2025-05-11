@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Tags - {{ site.site_title }}{% endblock %}
+{% block description %}Browse all tags and categories on {{ site.site_title }}{% endblock %}
+
+{% block content %}
+<section class="tags-page">
+    <header class="page-header">
+        <h1>Tags</h1>
+        <p>Browse content by topic or interest</p>
+    </header>
+
+    <!-- Popular Tags Section -->
+    <section class="popular-tags-section">
+        <h2>Popular Tags</h2>
+        <div class="tag-cloud">
+            {% for tag in tags|sort(attribute='count', reverse=true) if tag.count > 1 %}
+            <a href="{{ tag.url }}" class="tag tag-lg" {% if tag.color %}style="background-color: {{ tag.color }}; color: white;"{% endif %}>
+                {% if tag.icon %}<span class="icon">{{ tag.icon }}</span>{% endif %}
+                {{ tag.display_name }} <span class="count">({{ tag.count }})</span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- All Tags Section -->
+    <section class="alphabetical-tags">
+        <h2>All Tags (Alphabetical)</h2>
+        
+        <div class="tag-groups">
+            {% set all_tags = tags|sort(attribute='display_name') %}
+            {% set current_letter = '' %}
+            
+            {% for tag in all_tags %}
+                {% set first_letter = tag.display_name[0]|upper %}
+                
+                {% if first_letter != current_letter %}
+                    {% if current_letter != '' %}
+                    </div>
+                    {% endif %}
+                    
+                    {% set current_letter = first_letter %}
+                    <div class="tag-group">
+                        <h3 class="letter-heading">{{ current_letter }}</h3>
+                {% endif %}
+                
+                <a href="{{ tag.url }}" class="tag" {% if tag.color %}style="background-color: {{ tag.color }}30; color: {{ tag.color }};"{% endif %}>
+                    {% if tag.icon %}<span class="icon">{{ tag.icon }}</span>{% endif %}
+                    {{ tag.display_name }} <span class="count">({{ tag.count }})</span>
+                </a>
+            {% endfor %}
+            
+            {% if tags|length > 0 %}
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Tags Page Styles */
+    .tags-page {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .page-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .page-header h1 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .page-header p {
+        color: #777;
+        font-size: 1.1rem;
+    }
+    
+    .tags-page section {
+        margin-bottom: 3rem;
+    }
+    
+    .tags-page h2 {
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    /* Tags Section */
+    .popular-tags-section .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tag-lg {
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    /* Alphabetical Tag List */
+    .tag-groups {
+        margin-top: 1.5rem;
+    }
+    
+    .tag-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .letter-heading {
+        display: inline-block;
+        background-color: #f1f1f1;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 50%;
+        margin-bottom: 0.75rem;
+        margin-right: 0.5rem;
+    }
+    
+    .tag-group .tag {
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .tag-lg {
+            font-size: 0.9rem;
+            padding: 0.3rem 0.6rem;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,115 @@
+# tags.yaml - Tag definitions and metadata
+#
+# This file contains metadata for tags used on the site.
+# Each tag can have the following properties:
+#   - description: A brief explanation of what the tag represents
+#   - display_name: How the tag should be displayed (if different from slug)
+#   - color: A hex color code for styling (optional)
+#   - icon: An icon identifier (optional)
+#   - featured: Boolean to indicate important tags (optional)
+#   - order: Number to control display order (optional, lower numbers appear first)
+
+# Music-related tags
+music:
+  description: "Posts about music, instruments, and music production"
+  display_name: "Music"
+  color: "#3498db"
+
+indie:
+  description: "Independent music, DIY releases, and underground artists"
+  display_name: "Indie"
+  color: "#e74c3c"
+
+jazz:
+  description: "Jazz music, artists, theory, and history"
+  display_name: "Jazz"
+  color: "#f39c12"
+
+electronic:
+  description: "Electronic music in all its forms - from ambient to techno"
+  display_name: "Electronic"
+  color: "#9b59b6"
+
+ambient:
+  description: "Atmospheric and textural soundscapes"
+  display_name: "Ambient"
+  color: "#34495e"
+
+modular:
+  description: "Modular synthesis, Eurorack, and hardware synths"
+  display_name: "Modular Synthesis"
+  color: "#1abc9c"
+
+# Technology tags
+technology:
+  description: "Posts about various technologies, tools, and digital innovations"
+  display_name: "Technology"
+  color: "#2ecc71"
+
+web-dev:
+  description: "Web development, including HTML, CSS, JavaScript, and related frameworks"
+  display_name: "Web Development"
+  color: "#e67e22"
+
+python:
+  description: "Python programming language, libraries, and applications"
+  display_name: "Python"
+  color: "#3498db"
+
+linux:
+  description: "Linux operating systems, command line tools, and server administration"
+  display_name: "Linux"
+  color: "#f1c40f"
+
+# Radio & Broadcasting tags
+radio:
+  description: "Posts about radio broadcasting, internet radio, and streaming"
+  display_name: "Radio"
+  color: "#9b59b6"
+
+streaming:
+  description: "Live audio/video streaming technologies and platforms"
+  display_name: "Streaming"
+  color: "#e74c3c"
+
+podcasts:
+  description: "Podcast production, distribution, and recommendations"
+  display_name: "Podcasts"
+  color: "#1abc9c"
+
+# Culture & Arts tags
+art:
+  description: "Visual arts, design, and creative expression"
+  display_name: "Art & Design"
+  color: "#e74c3c"
+
+literature:
+  description: "Books, poetry, and written creative works"
+  display_name: "Literature"
+  color: "#3498db"
+
+film:
+  description: "Movies, cinema, and visual storytelling"
+  display_name: "Film"
+  color: "#f39c12"
+
+# Meta tags
+tutorial:
+  description: "Step-by-step guides and instructional content"
+  display_name: "Tutorials"
+  color: "#2ecc71"
+
+review:
+  description: "Product and media reviews"
+  display_name: "Reviews"
+  color: "#f1c40f"
+
+interview:
+  description: "Conversations with artists, creators, and notable figures"
+  display_name: "Interviews"
+  color: "#9b59b6"
+
+project:
+  description: "Personal and collaborative projects"
+  display_name: "Projects"
+  color: "#3498db"

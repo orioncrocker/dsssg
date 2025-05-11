@@ -270,6 +270,27 @@ nav ul li a:hover {
     border: 1px solid var(--border);
 }
 
+.post-content ul,
+.post-content ol {
+    margin-left: 1.5rem;  /* Add left margin to align with paragraphs */
+    padding-left: 1rem;   /* Add some padding between bullet/number and text */
+}
+
+.post-content li {
+    margin-bottom: 0.5rem;  /* Add space between list items */
+}
+
+/* Also fix alignment in post excerpts */
+.post-excerpt ul,
+.post-excerpt ol {
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+}
+
+.post-excerpt li {
+    margin-bottom: 0.5rem;
+}
+
 /* Related Posts */
 .post-footer {
     margin-top: 2rem;

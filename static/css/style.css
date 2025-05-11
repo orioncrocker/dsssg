@@ -1,4 +1,4 @@
-/* Basic Reset */
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,83 +6,132 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: "Courier New", Courier, monospace;
     line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
+    color: #cccccc;
+    background-color: #111111;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+h1 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: #00ff00;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+pre, code {
+    font-family: "Courier New", Courier, monospace;
+    background-color: #222222;
+    padding: 0.5rem;
+    border-radius: 3px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+code {
+    padding: 0.2rem 0.4rem;
+}
+
+/* Header and Navigation */
+header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #333333;
+    padding-bottom: 1rem;
+}
+
+header h1 {
+    margin-bottom: 0.5rem;
+}
+
+nav {
+    margin-top: 1rem;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+nav ul li a {
+    color: #00ff00;
+    text-decoration: none;
+    padding: 0.25rem 0;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
 }
 
 /* Container */
 .container {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* Header */
-header {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem 0;
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-header h1 {
-    font-size: 1.5rem;
-    margin: 0;
-}
-
-header h1 a {
-    text-decoration: none;
-    color: #333;
-}
-
-/* Main Content */
-main {
-    padding: 2rem 0;
 }
 
 /* Content Wrapper */
 .content-wrapper {
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    gap: 2rem;
+    display: block;
 }
 
 /* Post List */
 .post-list {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
     margin-top: 1.5rem;
 }
 
+/* Post Summary */
 .post-summary {
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    padding: 1.5rem;
-    width: 100%;
-    border-left: 4px solid #eee;
-    margin-bottom: 2rem;
+    background-color: #222222;
+    border-left: 2px solid #00ff00;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .post-summary h3 {
     margin-top: 0;
-    margin-bottom: 0.75rem;
-    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.post-summary h3 a {
+    color: #ffffff;
+}
+
+.post-summary h3 a:hover {
+    color: #00ff00;
 }
 
 .post-meta {
     font-size: 0.9rem;
-    color: #666;
+    color: #888888;
     margin-bottom: 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -91,7 +140,12 @@ main {
 }
 
 .post-meta time {
-    margin-right: 0.5rem;
+    color: #00ff00;
+}
+
+.post-meta::before {
+    content: ":: ";
+    color: #00ff00;
 }
 
 /* Tags */
@@ -104,199 +158,43 @@ main {
 .tag {
     display: inline-flex;
     align-items: center;
-    background-color: #f1f1f1;
-    color: #555;
+    background-color: #333333;
+    color: #00ff00;
     padding: 0.2rem 0.5rem;
-    border-radius: 3px;
+    border-radius: 0;
     font-size: 0.8rem;
     text-decoration: none;
-    transition: all 0.2s ease;
+    border: 1px solid #444444;
 }
 
 .tag:hover {
-    background-color: #e0e0e0;
-    transform: translateY(-1px);
+    background-color: #444444;
+    color: #ffffff;
 }
 
 .tag.active {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #00ff00;
+    color: #000000;
 }
 
-.tag .icon {
-    margin-right: 0.25rem;
-    font-size: 0.9rem;
-}
-
-.tag .count {
-    font-size: 0.75rem;
-    opacity: 0.7;
-    margin-left: 0.25rem;
-}
-
-.tag-small {
-    font-size: 0.8rem;
-    text-decoration: none;
-}
-
-/* Tag Cloud */
-.tag-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-/* Sidebar */
-.sidebar {
-    align-self: start;
-    position: sticky;
-    top: 2rem;
-}
-
-.tags-widget {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-}
-
-.tags-widget h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #eee;
-}
-
-/* Post Excerpts */
+/* Post Content */
 .post-excerpt {
     margin-bottom: 1rem;
-    color: #333;
-    line-height: 1.6;
-    font-size: 1rem;
+    color: #aaaaaa;
 }
 
-/* Add styles for common elements in excerpts */
 .post-excerpt p {
     margin-bottom: 0.75rem;
 }
 
-.post-excerpt ul,
-.post-excerpt ol {
-    margin-left: 1.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.post-excerpt li {
-    margin-bottom: 0.25rem;
-}
-
-.post-excerpt strong,
-.post-excerpt b {
-    font-weight: 600;
-}
-
-.post-excerpt em,
-.post-excerpt i {
-    font-style: italic;
-}
-
-.post-excerpt a {
-    color: #0066cc;
-    text-decoration: none;
-}
-
-.post-excerpt a:hover {
-    text-decoration: underline;
-}
-
-.post-excerpt h2,
-.post-excerpt h3,
-.post-excerpt h4 {
-    margin-top: 0.75rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.post-excerpt code {
-    font-family: monospace;
-    background-color: #f5f5f5;
-    padding: 0.125rem 0.25rem;
-    border-radius: 3px;
-    font-size: 0.9em;
-}
-
-.post-excerpt code {
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    background-color: #f6f8fa;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.9em;
-    color: #24292e;
-    white-space: nowrap;
-}
-
-/* Code blocks */
-.post-excerpt pre {
-    background-color: #f6f8fa;
-    border-radius: 6px;
-    padding: 1rem;
-    overflow-x: auto;
-    margin: 1rem 0;
-    border: 1px solid #e1e4e8;
-}
-
-.post-excerpt pre code {
-    background-color: transparent;
-    padding: 0;
-    border-radius: 0;
-    white-space: pre;
-    font-size: 0.9em;
-    color: #24292e;
-    display: block;
-    line-height: 1.5;
-}
-
-/* For markdown-style code blocks that might get converted differently */
-.post-excerpt pre.highlight,
-.post-excerpt div.highlight {
-    background-color: #f6f8fa;
-    border-radius: 6px;
-    padding: 1rem;
-    overflow-x: auto;
-    margin: 1rem 0;
-    border: 1px solid #e1e4e8;
-}
-
-/* For triple backtick blocks that might still be in markdown format */
-.post-excerpt .language-markdown,
-.post-excerpt .language-javascript,
-.post-excerpt .language-python,
-.post-excerpt .language-css,
-.post-excerpt .language-html {
-    display: block;
-    background-color: #f6f8fa;
-    border-radius: 6px;
-    padding: 1rem;
-    overflow-x: auto;
-    margin: 1rem 0;
-    border: 1px solid #e1e4e8;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: 0.9em;
-    line-height: 1.5;
-}
-
-/* Handle last child to remove bottom margin */
-.post-excerpt > *:last-child {
-    margin-bottom: 0;
-}
-
 .read-more {
     display: inline-block;
-    color: #007bff;
+    color: #00ff00;
     text-decoration: none;
-    font-weight: 500;
+}
+
+.read-more::after {
+    content: " >>";
 }
 
 .read-more:hover {
@@ -305,18 +203,15 @@ main {
 
 /* Single Post */
 .post {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
+    background-color: #222222;
+    border-left: 2px solid #00ff00;
+    padding: 1.5rem;
 }
 
 .post-header {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #333333;
 }
 
 .post-content {
@@ -333,112 +228,105 @@ main {
 .post-content h2,
 .post-content h3,
 .post-content h4 {
-    margin: 2rem 0 1rem;
+    margin: 1.5rem 0 1rem;
+    color: #00ff00;
 }
 
 .post-content img {
     max-width: 100%;
     height: auto;
-    border-radius: 4px;
+    border: 1px solid #333333;
 }
 
 .post-content pre {
-    background-color: #f6f8fa;
-    border-radius: 4px;
-    padding: 1rem;
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
+    background-color: #1a1a1a;
+    border: 1px solid #333333;
 }
 
 .post-content code {
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    background-color: #f6f8fa;
+    font-family: "Courier New", Courier, monospace;
+    background-color: #1a1a1a;
     padding: 0.2rem 0.4rem;
-    border-radius: 3px;
+    color: #00ff00;
 }
 
 .post-footer {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #eee;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #333333;
+}
+
+/* Related Posts */
+.related-posts {
+    margin-top: 2rem;
 }
 
 .related-posts h3 {
+    color: #00ff00;
     margin-bottom: 1rem;
 }
 
 .related-posts ul {
-    list-style-position: inside;
+    list-style: none;
 }
 
 .related-posts li {
     margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.related-posts li::before {
+    content: ">>";
+    position: absolute;
+    left: 0;
+    color: #00ff00;
 }
 
 .related-posts small {
     display: block;
+    color: #888888;
     margin-top: 0.25rem;
-    margin-left: 1.5rem;
-    color: #666;
+    margin-left: 1rem;
 }
 
 /* Tag Archive */
-.tag-header {
+.tag-archive {
     margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 3px solid #eee;
+}
+
+.tag-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333333;
 }
 
 .tag-header h1 {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.tag-header .large-icon {
-    font-size: 1.5rem;
-    margin-right: 0.5rem;
+    color: #00ff00;
 }
 
 .tag-description {
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-    color: #555;
+    color: #aaaaaa;
+    margin-top: 0.5rem;
 }
 
-.post-count {
-    font-size: 0.9rem;
-    color: #777;
-}
-
-.nav a {
-    text-align: center;
-    padding-right: 10px;
+/* Footer */
+footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid #333333;
+    color: #666666;
+    font-size: 0.8rem;
 }
 
 /* Responsive */
-@media (max-width: 900px) {
-    .content-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    .sidebar {
-        position: static;
-    }
-}
-
 @media (max-width: 768px) {
-    .post-list {
-        grid-template-columns: 1fr;
+    body {
+        padding: 1rem;
     }
     
-    header .container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    nav {
-        margin-top: 1rem;
-        width: 100%;
+    nav ul {
+        flex-direction: row;
+        justify-content: space-between;
     }
 }

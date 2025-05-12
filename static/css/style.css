@@ -1,0 +1,314 @@
+/* Updated colors to match Monokai Pro scheme */
+/* Variables for Monokai Pro colors */
+:root {
+    /* Main colors */
+    --background: #1E1D1E;
+    --text-color: #F2EFE9;
+    --primary: #BF5841;
+    --secondary: #8C8473;
+    --tertiary: #BEB0A6;
+    --code-bg: #1E1C1C;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Courier New", "JetBrains Mono", "Fira Mono", "Roboto Mono", "SF Mono", "Menlo", "Consolas", monospace;
+    color: var(--text-color);
+    font-size: 15px;
+    line-height: 1.5;
+    background-color: var(--background);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    letter-spacing: 0.01em;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    margin-bottom: 1rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    color: var(--tertiary);
+}
+
+
+/* Lists - common styles */
+ul, ol {
+    margin-left: 1rem;
+}
+
+/* Base styles for code blocks (pre) */
+pre {
+    background-color: var(--code-bg);
+    color: var(--primary);
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    border-radius: 3px;
+    border: 1px solid var(--primary);
+}
+
+/* Styles for inline code */
+code {
+    background-color: var(--primary);
+    color: var(--code-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+}
+
+/* Override for code within pre (code blocks) */
+pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+}
+
+/* Remove double styling for code inside pre blocks */
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Header and Navigation */
+header {
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    margin-bottom: 0rem;
+}
+
+nav {
+    padding: 0.5rem;
+    background-color: var(--primary);
+    border-radius: 3px;
+}
+
+nav a {
+    color: var(--background);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+nav ul li a {
+    color: var(--primary);
+    text-decoration: none;
+    padding: 0.25rem 0;
+}
+
+nav ul li a:hover {
+    color: var(--green);
+    text-decoration: underline;
+}
+
+img {
+    padding: 1rem;
+    display: block;
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+/* Container and Content Wrapper */
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.content-wrapper {
+    display: block;
+}
+
+/* Post List */
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Post Summary */
+.post-summary {
+    margin-bottom: 1.5rem;
+}
+
+.post-summary h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Post Metadata */
+.post-meta {
+    font-size: 0.85rem;
+    color: var(--tertiary);
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Tags */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tags::before {
+    content: " :: ";
+    margin: 0 0.25rem;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 3px;
+    background-color: var(--primary);
+    color: var(--code-bg);
+}
+
+/* Post Excerpts */
+.post-excerpt {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.post-excerpt p {
+    margin-bottom: 0.75rem;
+}
+
+.read-more {
+    display: inline-block;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.read-more::after {
+    content: " >>";
+}
+
+.post-header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.post-content p,
+.post-content ul,
+.post-content ol,
+.post-content blockquote {
+    margin-bottom: 1rem;
+}
+
+/* Style for images with captions */
+.post-content figure {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post-content figure img {
+    max-width: 100%;
+    height: auto;
+}
+
+.post-content figcaption {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    text-align: center;
+    margin-top: 0.5rem;
+    max-width: 90%;
+}
+
+/* Post Footer and Related Posts */
+.post-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+}
+
+.related-posts {
+    margin-top: 2rem;
+}
+
+.related-posts ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.related-posts li {
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.related-posts li::before {
+    content: ">>";
+    position: absolute;
+    left: 0;
+    color: var(--orange);
+}
+
+.related-posts small {
+    display: block;
+    color: var(--secondary);
+    margin-top: 0.25rem;
+    margin-left: 1rem;
+}
+
+.tag-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.tag-description {
+    color: var(--text-color);
+    margin-top: 0.5rem;
+}
+
+/* Footer */
+footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    color: var(--secondary);
+    font-size: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
+    nav ul {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

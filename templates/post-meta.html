@@ -1,0 +1,14 @@
+<!-- post-meta.html - A reusable template for post metadata -->
+
+<div class="post-meta">
+    <time datetime="{{ post.date|date('c') }}">{{ post.date|date(site.date_format) }}</time>
+    {% if post.processed_tags %}
+    <div class="tags">
+        {% for tag in post.processed_tags %}
+        <a href="{{ tag.url }}" class="tag">
+            {{ tag.display_name }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

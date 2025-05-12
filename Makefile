@@ -10,10 +10,13 @@ help:
 	$(info make build|clean|remote)
 
 deploy:
-		rsync -ahvuz dst/ $(USERNAME)@$(REMOTE):$(DESTINATION)
+	rsync -ahvuz site/* $(USERNAME)@$(REMOTE):$(DESTINATION)
 
 clean:
-	    rm -r dst
+	rm -r site/*
 
 build:
-	    sh build.sh
+	python3 build.py
+
+local:
+	sudo rsync -auvt site/* /var/www/html

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site.site_title }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ site.site_description }}{% endblock %}">
+    <link rel="stylesheet" href="/static/css/style.css?v=1.0.1">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="/">{{ site.site_title }}</a></h1>
+            <nav>
+                <a href="/tags.html">Tags</a>
+                <a href="/about.html">About</a>
+                <a href="/contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ now.year }} {{ site.site_title }}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

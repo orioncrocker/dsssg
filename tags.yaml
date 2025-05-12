@@ -1,0 +1,96 @@
+# tags.yaml - Tag definitions and metadata
+#
+# This file contains metadata for tags used on the site.
+# Each tag can have the following properties:
+#   - description: A brief explanation of what the tag represents
+#   - display_name: How the tag should be displayed (if different from slug)
+#   - color: A hex color code for styling (optional)
+#   - icon: An icon identifier (optional)
+#   - featured: Boolean to indicate important tags (optional)
+#   - order: Number to control display order (optional, lower numbers appear first)
+
+# Music-related tags
+music:
+  description: "Posts about music, instruments, and music production"
+  display_name: "Music"
+ 
+indie:
+  description: "Independent music, DIY releases, and underground artists"
+  display_name: "Indie"
+ 
+jazz:
+  description: "Jazz music, artists, theory, and history"
+  display_name: "Jazz"
+ 
+electronic:
+  description: "Electronic music in all its forms - from ambient to techno"
+  display_name: "Electronic"
+ 
+ambient:
+  description: "Atmospheric and textural soundscapes"
+  display_name: "Ambient"
+ 
+modular:
+  description: "Modular synthesis, Eurorack, and hardware synths"
+  display_name: "Modular Synthesis"
+ 
+# Technology tags
+technology:
+  description: "Posts about various technologies, tools, and digital innovations"
+  display_name: "Technology"
+ 
+web-dev:
+  description: "Web development, including HTML, CSS, JavaScript, and related frameworks"
+  display_name: "Web Development"
+ 
+python:
+  description: "Python programming language, libraries, and applications"
+  display_name: "Python"
+ 
+linux:
+  description: "Linux operating systems, command line tools, and server administration"
+  display_name: "Linux"
+ 
+# Radio & Broadcasting tags
+radio:
+  description: "Posts about radio broadcasting, internet radio, and streaming"
+  display_name: "Radio"
+ 
+streaming:
+  description: "Live audio/video streaming technologies and platforms"
+  display_name: "Streaming"
+ 
+podcasts:
+  description: "Podcast production, distribution, and recommendations"
+  display_name: "Podcasts"
+ 
+# Culture & Arts tags
+art:
+  description: "Visual arts, design, and creative expression"
+  display_name: "Art & Design"
+ 
+literature:
+  description: "Books, poetry, and written creative works"
+  display_name: "Literature"
+ 
+film:
+  description: "Movies, cinema, and visual storytelling"
+  display_name: "Film"
+ 
+# Meta tags
+tutorial:
+  description: "Step-by-step guides and instructional content"
+  display_name: "Tutorials"
+ 
+review:
+  description: "Product and media reviews"
+  display_name: "Reviews"
+ 
+interview:
+  description: "Conversations with artists, creators, and notable figures"
+  display_name: "Interviews"
+ 
+project:
+  description: "Personal and collaborative projects"
+  display_name: "Projects"
+ 

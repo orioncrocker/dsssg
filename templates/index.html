@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ site.site_title }} - Home{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="posts">
+        <div class="post-list">
+            {% for post in posts %}
+            <article class="post-summary">
+                <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+                {% include "post-meta.html" %}
+                <div class="post-excerpt">
+                    {{ post.content|striptags|safe_truncate()|safe }}
+                </div>
+                <a href="{{ post.url }}" class="read-more">Read more</a>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

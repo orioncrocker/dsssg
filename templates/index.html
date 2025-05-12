@@ -32,24 +32,5 @@
             {% endfor %}
         </div>
     </section>
-
-    <!-- I don't think I like this thing
-    <aside class="sidebar">
-        <div class="tags-widget">
-            <h3>Tags</h3>
-            <div class="tag-cloud">
-                {% for tag in tags|sort(attribute='count', reverse=true) %}
-                <a href="{{ tag.url }}" class="tag" 
-                   {% if tag.color %}style="background-color: {{ tag.color }}30; color: {{ tag.color }};"{% endif %}
-                   title="{{ tag.count }} posts">
-                    {% if tag.icon %}<span class="icon">{{ tag.icon }}</span>{% endif %}
-                    {{ tag.display_name }} <span class="count">({{ tag.count }})</span>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-    </aside>
-    --!>
-
 </div>
 {% endblock %}

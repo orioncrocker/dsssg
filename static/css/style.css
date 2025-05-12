@@ -8,7 +8,7 @@
     --foreground: #fcfcfa;        /* Main text */
     --comment: #727072;           /* Comments/subdued text */
     --selection: #444267;         /* Selection background */
-    
+
     /* Accent colors */
     --red: #ff6188;               /* Keywords, operators */
     --orange: #fc9867;            /* Constants, attributes */
@@ -16,7 +16,7 @@
     --green: #a9dc76;             /* Functions, methods */
     --blue: #78dce8;              /* Classes, types */
     --purple: #ab9df2;            /* Special keywords */
-    
+
     /* UI colors */
     --border: #444444;            /* Borders, dividers */
     --highlight-bg: #403e41;      /* Highlighted background */
@@ -141,7 +141,6 @@ nav ul li a:hover {
 /* Post Summary */
 .post-summary {
     background-color: var(--highlight-bg);
-    border-left: 2px solid var(--green);
     padding: 1rem;
     margin-bottom: 1.5rem;
 }

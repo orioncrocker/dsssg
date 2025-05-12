@@ -1,7 +1,7 @@
 ---
 title: "This is a test post"
 date: 2025-05-10
-tags: [radio, linux]
+tags: [technology, linux, web-dev]
 ---
 
 Here post contains a few examples of how Markdown is rendered into HTML. 

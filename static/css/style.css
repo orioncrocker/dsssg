@@ -43,7 +43,7 @@ a {
 }
 
 a:hover {
-    color: var(--secondary);
+    color: var(--tertiary);
 }
 
 
@@ -52,22 +52,32 @@ ul, ol {
     margin-left: 1rem;
 }
 
-/* Code styling - base for all code elements */
-pre, code {
-    font-family: inherit;
-    font-size: inherit;
-    background-color: var(--code-bg);
-    overflow-x: auto;
-}
-
+/* Base styles for code blocks (pre) */
 pre {
+    background-color: var(--code-bg);
+    color: var(--primary);
     padding: 1rem;
     margin: 1rem 0;
+    overflow-x: auto;
+    border-radius: 3px;
+    border: 1px solid var(--primary);
 }
 
+/* Styles for inline code */
 code {
+    background-color: var(--primary);
+    color: var(--code-bg);
     padding: 0.2rem 0.4rem;
-    color: var(--primary);
+    border-radius: 3px;
+}
+
+/* Override for code within pre (code blocks) */
+pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+    border: none;
 }
 
 /* Remove double styling for code inside pre blocks */
@@ -86,7 +96,13 @@ header h1 {
 }
 
 nav {
-    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: var(--primary);
+    border-radius: 3px;
+}
+
+nav a {
+    color: var(--background);
 }
 
 nav ul {
@@ -171,9 +187,11 @@ img {
 .tag {
     display: inline-flex;
     align-items: center;
-    background-color: var(--code-bg);
     padding: 0.2rem 0.5rem;
     font-size: 0.75rem;
+    border-radius: 3px;
+    background-color: var(--primary);
+    color: var(--code-bg);
 }
 
 /* Post Excerpts */
@@ -205,7 +223,28 @@ img {
 .post-content ul,
 .post-content ol,
 .post-content blockquote {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Style for images with captions */
+.post-content figure {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post-content figure img {
+    max-width: 100%;
+    height: auto;
+}
+
+.post-content figcaption {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    text-align: center;
+    margin-top: 0.5rem;
+    max-width: 90%;
 }
 
 /* Post Footer and Related Posts */

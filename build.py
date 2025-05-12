@@ -21,9 +21,10 @@ from jinja2 import Environment, FileSystemLoader
 
 # Configuration
 CONFIG = {
-    'content_dir': 'content',    # Directory containing markdown files
-    'output_dir': 'site',        # Directory for generated HTML files
-    'template_dir': 'templates', # Directory containing templates
+    'content_dir': 'content/posts',# Content files
+    'nav_dir': 'content/nav',    # Static nav files
+    'output_dir': 'site',        # Generated HTML filepath
+    'template_dir': 'templates', # HTML templates
     'tag_template': 'tag.html',  # Template for tag pages
     'post_template': 'post.html',# Template for post pages
     'index_template': 'index.html', # Template for index page
@@ -68,10 +69,7 @@ def get_post_date(front_matter, file_path):
     """Get post date from front matter or file modification time"""
     if 'date' in front_matter:
         return front_matter['date']
-    
-    # Fall back to file modification time
-    mod_time = os.path.getmtime(file_path)
-    return datetime.fromtimestamp(mod_time)
+    return ""
 
 def clean_output_directory():
     """Clean output directory"""
@@ -80,6 +78,10 @@ def clean_output_directory():
     os.makedirs(CONFIG['output_dir'], exist_ok=True)
     os.makedirs(os.path.join(CONFIG['output_dir'], 'tags'), exist_ok=True)
     os.makedirs(os.path.join(CONFIG['output_dir'], 'posts'), exist_ok=True)
+
+def generate_nav_url(slug):
+    """Generate URL for a post - now independent of tags"""
+    return f"/{slug}.html"
 
 def generate_post_url(slug):
     """Generate URL for a post - now independent of tags"""
@@ -331,7 +333,55 @@ def build_site():
                 truncated_html = truncated_html.replace(placeholder, code)
         
         return truncated_html
-    
+
+    def process_markdown(directory, is_nav=False):
+        # Process all markdown files in content directory
+        for root, _, files in os.walk(CONFIG[directory]):
+            for file in files:
+                if file.endswith('.md'):
+                    file_path = os.path.join(root, file)
+
+                    # Generate slug from file name (without extension)
+                    slug = os.path.splitext(os.path.basename(file_path))[0]
+
+                    # Read markdown file
+                    front_matter, html_content = read_markdown_file(file_path)
+
+                    # Get post title
+                    title = front_matter.get('title', slug)
+
+                    # Get post date
+                    date = get_post_date(front_matter, file_path)
+
+                    # Get tags (defaulting to empty list)
+                    tags = front_matter.get('tags', [])
+
+                    # If tags is a string, convert to list
+                    if isinstance(tags, str):
+                        tags = [tag.strip() for tag in tags.split(',')]
+
+                    # Track all tags used
+                    all_tags.update(tags)
+
+                    # Create post object
+                    post = {
+                        'title': title,
+                        'date': date,
+                        'tags': tags,
+                        'content': html_content,
+                        'slug': slug,
+                        'url': generate_nav_url(slug) if is_nav else generate_post_url(slug)
+                    }
+
+                    if is_nav is False:
+                        posts.append(post)
+
+                        # Add post to each of its tags
+                        for tag in tags:
+                            tags_to_posts[tag].append(post)
+                    else:
+                        nav_pages.append(post)
+
     env.filters['date'] = date_filter
     env.filters['safe_truncate'] = safe_html_truncate
 
@@ -346,53 +396,13 @@ def build_site():
     
     # Collect all posts and organize by tags
     posts = []
+    nav_pages = []
     tags_to_posts = defaultdict(list)
     all_tags = set()
-    
-    # Process all markdown files in content directory
-    for root, _, files in os.walk(CONFIG['content_dir']):
-        for file in files:
-            if file.endswith('.md'):
-                file_path = os.path.join(root, file)
-                
-                # Generate slug from file name (without extension)
-                slug = os.path.splitext(os.path.basename(file_path))[0]
-                
-                # Read markdown file
-                front_matter, html_content = read_markdown_file(file_path)
-                
-                # Get post title
-                title = front_matter.get('title', slug)
-                
-                # Get post date
-                date = get_post_date(front_matter, file_path)
-                
-                # Get tags (defaulting to empty list)
-                tags = front_matter.get('tags', [])
-                
-                # If tags is a string, convert to list
-                if isinstance(tags, str):
-                    tags = [tag.strip() for tag in tags.split(',')]
-                
-                # Track all tags used
-                all_tags.update(tags)
-                
-                # Create post object
-                post = {
-                    'title': title,
-                    'date': date,
-                    'tags': tags,
-                    'content': html_content,
-                    'slug': slug,
-                    'url': generate_post_url(slug)
-                }
-                
-                posts.append(post)
-                
-                # Add post to each of its tags
-                for tag in tags:
-                    tags_to_posts[tag].append(post)
-    
+
+    process_markdown('content_dir')
+    process_markdown('nav_dir', True)
+
     # Sort posts by date (newest first)
     posts.sort(key=lambda x: x['date'], reverse=True)
     
@@ -403,7 +413,26 @@ def build_site():
         tag_obj = process_tag(tag_name, tags_metadata)
         tag_obj['count'] = len(tags_to_posts[tag_name])
         processed_tags[tag_name] = tag_obj
-    
+
+    # Generate nav pages
+    post_template = env.get_template(CONFIG['post_template'])
+    for post in nav_pages:
+        # Generate output path
+        output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+        # Render post template
+        html = post_template.render(
+            post=post,
+            site=CONFIG,
+            posts=posts,
+            tags=list(processed_tags.values())
+        )
+
+        # Write to file
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+
     # Generate post pages
     post_template = env.get_template(CONFIG['post_template'])
     for post in posts:
@@ -412,14 +441,14 @@ def build_site():
         for tag_name in post['tags']:
             if tag_name in processed_tags:
                 post_tags.append(processed_tags[tag_name])
-        
+
         # Update post with processed tags
         post['processed_tags'] = post_tags
-        
+
         # Generate output path
         output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        
+
         # Render post template
         html = post_template.render(
             post=post,
@@ -427,11 +456,11 @@ def build_site():
             posts=posts,
             tags=list(processed_tags.values())
         )
-        
+
         # Write to file
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
-    
+
     # Generate tag pages
     tag_template = env.get_template(CONFIG['tag_template'])
     for tag_name, tag_posts in tags_to_posts.items():

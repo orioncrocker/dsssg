@@ -5,7 +5,7 @@
 
 {% block content %}
 <section class="tag-archive">
-    <header class="tag-header" {% if tag.color %}style="border-color: {{ tag.color }};"{% endif %}>
+    <header class="tag-header">
         <h3>
             {% if tag.icon %}<span class="icon large-icon" {% if tag.color %}style="color: {{ tag.color }};"{% endif %}>{{ tag.icon }}</span>{% endif %}
             Posts tagged with "{{ tag.display_name }}"
@@ -24,7 +24,7 @@
 
     <div class="post-list">
         {% for post in posts %}
-        <article class="post-summary" {% if tag.color %}style="border-left: 4px solid {{ tag.color }};"{% endif %}>
+        <article class="post-summary">
             <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
             {% include "post-meta.html" %}
             <div class="post-excerpt">

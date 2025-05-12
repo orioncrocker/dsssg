@@ -40,3 +40,10 @@ Output:
         (|     | )
         /'\_   _/`\
         \___)=(___/
+
+- Bullet point lists are important
+- So let's make sure they are formatted correctly
+
+Numbered lists are important too
+1. First item
+2. Second item

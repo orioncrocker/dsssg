@@ -2,12 +2,12 @@
 /* Variables for Monokai Pro colors */
 :root {
     /* Main colors */
-    --background: #1E1D1E;        /* Background */
-    --text-color: #BEB0A6;        /* Main text */
-    --comment: #BEB0A6;           /* Comments/subdued text */
-    --selection: #444267;         /* Selection background */
-    --hyperlink: #7B6234;         /* Classes, types */
-    --code-bg: #171615;           /* Slightly darker than the main background */
+    --background: #1E1D1E;
+    --text-color: #F2EFE9;
+    --primary: #BF5841;
+    --secondary: #8C8473;
+    --tertiary: #BEB0A6;
+    --code-bg: #1E1C1C;
 }
 
 /* Reset and Base Styles */
@@ -37,13 +37,13 @@ h1, h2, h3, h4, h5, h6 {
 p { margin-bottom: 1rem; }
 
 a {
-    color: var(--hyperlink);
+    color: var(--primary);
     text-decoration: none;
     transition: all 0.2s ease;
 }
 
 a:hover {
-    color: var(--comment);
+    color: var(--secondary);
 }
 
 
@@ -67,7 +67,7 @@ pre {
 
 code {
     padding: 0.2rem 0.4rem;
-    color: var(--hyperlink);
+    color: var(--primary);
 }
 
 /* Remove double styling for code inside pre blocks */
@@ -98,7 +98,7 @@ nav ul {
 }
 
 nav ul li a {
-    color: var(--hyperlink);
+    color: var(--primary);
     text-decoration: none;
     padding: 0.25rem 0;
 }
@@ -148,7 +148,7 @@ img {
 /* Post Metadata */
 .post-meta {
     font-size: 0.85rem;
-    color: var(--comment);
+    color: var(--tertiary);
     margin-bottom: 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -188,7 +188,7 @@ img {
 
 .read-more {
     display: inline-block;
-    color: var(--hyperlink);
+    color: var(--primary);
     text-decoration: none;
 }
 
@@ -239,7 +239,7 @@ img {
 
 .related-posts small {
     display: block;
-    color: var(--comment);
+    color: var(--secondary);
     margin-top: 0.25rem;
     margin-left: 1rem;
 }
@@ -250,7 +250,7 @@ img {
 }
 
 .tag-description {
-    color: var(--comment);
+    color: var(--text-color);
     margin-top: 0.5rem;
 }
 
@@ -258,7 +258,7 @@ img {
 footer {
     margin-top: 3rem;
     padding-top: 1rem;
-    color: var(--comment);
+    color: var(--secondary);
     font-size: 0.75rem;
 }
 

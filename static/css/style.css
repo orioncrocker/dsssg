@@ -174,9 +174,10 @@ nav ul li a:hover {
     color: var(--blue);
 }
 
-.post-meta::before {
-    content: ":: ";
+.post-meta time::after {
+    content: " :: ";
     color: var(--orange);
+    margin: 0 0.25rem;
 }
 
 /* Tags */

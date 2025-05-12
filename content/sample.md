@@ -4,8 +4,6 @@ date: 2023-09-15
 tags: [radio, streaming, technology, tutorial]
 ---
 
-# Getting Started with Streaming Internet Radio
-
 Setting up your own internet radio station has never been easier. This guide will walk you through the basics of creating and streaming your own radio content to listeners around the world.
 
 ## What You'll Need

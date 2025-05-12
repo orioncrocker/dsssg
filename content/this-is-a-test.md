@@ -4,8 +4,6 @@ date: 2025-05-10
 tags: [radio, linux]
 ---
 
-# This is a test post
-
 Here post contains a few examples of how Markdown is rendered into HTML. 
 
 To learn more visit <https://www.markdownguide.org/cheat-sheet>

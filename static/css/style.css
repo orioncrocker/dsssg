@@ -2,23 +2,12 @@
 /* Variables for Monokai Pro colors */
 :root {
     /* Main colors */
-    --background: #2d2a2e;        /* Background */
-    --foreground: #fcfcfa;        /* Main text */
-    --comment: #727072;           /* Comments/subdued text */
+    --background: #1E1D1E;        /* Background */
+    --text-color: #BEB0A6;        /* Main text */
+    --comment: #BEB0A6;           /* Comments/subdued text */
     --selection: #444267;         /* Selection background */
-
-    /* Accent colors */
-    --red: #ff6188;               /* Keywords, operators */
-    --orange: #fc9867;            /* Constants, attributes */
-    --yellow: #ffd866;            /* Strings, values */
-    --green: #a9dc76;             /* Functions, methods */
-    --purple: #ab9df2;            /* Special keywords */
-
-    /* UI colors */
-    --hyperlink: #78dce8;         /* Classes, types */
-    --highlight-bg: #2d2a2e;      /* Highlighted background */
-    --inactive: #939293;          /* Inactive text */
-    --code-bg: #272822;           /* Slightly darker than the main background */
+    --hyperlink: #7B6234;         /* Classes, types */
+    --code-bg: #171615;           /* Slightly darker than the main background */
 }
 
 /* Reset and Base Styles */
@@ -29,7 +18,7 @@
 
 body {
     font-family: "Courier New", "JetBrains Mono", "Fira Mono", "Roboto Mono", "SF Mono", "Menlo", "Consolas", monospace;
-    color: var(--foreground);
+    color: var(--text-color);
     font-size: 15px;
     line-height: 1.5;
     background-color: var(--background);
@@ -43,7 +32,6 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
     margin-bottom: 1rem;
-    color: var(--foreground);
 }
 
 p { margin-bottom: 1rem; }
@@ -55,8 +43,7 @@ a {
 }
 
 a:hover {
-    background-color: var(--highlight-bg);
-    color: var(--inactive);
+    color: var(--comment);
 }
 
 
@@ -87,7 +74,6 @@ code {
 pre code {
     background-color: transparent;
     padding: 0;
-    color: var(--foreground);
 }
 
 /* Header and Navigation */
@@ -162,7 +148,7 @@ img {
 /* Post Metadata */
 .post-meta {
     font-size: 0.85rem;
-    color: var(--inactive);
+    color: var(--comment);
     margin-bottom: 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -185,7 +171,7 @@ img {
 .tag {
     display: inline-flex;
     align-items: center;
-    background-color: var(--selection);
+    background-color: var(--code-bg);
     padding: 0.2rem 0.5rem;
     font-size: 0.75rem;
 }
@@ -194,7 +180,6 @@ img {
 .post-excerpt {
     font-size: 0.95rem;
     margin-bottom: 1rem;
-    color: var(--foreground);
 }
 
 .post-excerpt p {
@@ -254,7 +239,7 @@ img {
 
 .related-posts small {
     display: block;
-    color: var(--inactive);
+    color: var(--comment);
     margin-top: 0.25rem;
     margin-left: 1rem;
 }
@@ -265,7 +250,7 @@ img {
 }
 
 .tag-description {
-    color: var(--inactive);
+    color: var(--comment);
     margin-top: 0.5rem;
 }
 

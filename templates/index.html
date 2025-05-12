@@ -14,7 +14,7 @@
                     {% if post.processed_tags %}
                     <div class="tags">
                         {% for tag in post.processed_tags %}
-                        <a href="{{ tag.url }}" class="tag" {% if tag.color %}style="background-color: {{ tag.color }}; color: white;"{% endif %}>
+                        <a href="{{ tag.url }}" class="tag">
                             {% if tag.icon %}<span class="icon">{{ tag.icon }}</span>{% endif %}
                             {{ tag.display_name }}
                         </a>

@@ -12,11 +12,10 @@
     --orange: #fc9867;            /* Constants, attributes */
     --yellow: #ffd866;            /* Strings, values */
     --green: #a9dc76;             /* Functions, methods */
-    --blue: #78dce8;              /* Classes, types */
     --purple: #ab9df2;            /* Special keywords */
 
     /* UI colors */
-    --border: #2d2a2e;            /* Borders, dividers */
+    --hyperlink: #78dce8;         /* Classes, types */
     --highlight-bg: #2d2a2e;      /* Highlighted background */
     --inactive: #939293;          /* Inactive text */
     --code-bg: #272822;           /* Slightly darker than the main background */
@@ -26,7 +25,6 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
@@ -51,9 +49,16 @@ h1, h2, h3, h4, h5, h6 {
 p { margin-bottom: 1rem; }
 
 a {
-    color: var(--blue);
+    color: var(--hyperlink);
     text-decoration: none;
+    transition: all 0.2s ease;
 }
+
+a:hover {
+    background-color: var(--highlight-bg);
+    color: var(--inactive);
+}
+
 
 /* Lists - common styles */
 ul, ol {
@@ -75,15 +80,13 @@ pre {
 
 code {
     padding: 0.2rem 0.4rem;
-    color: var(--blue);
+    color: var(--hyperlink);
 }
 
 /* Remove double styling for code inside pre blocks */
 pre code {
     background-color: transparent;
     padding: 0;
-    border: none;
-    border-radius: 0;
     color: var(--foreground);
 }
 
@@ -109,7 +112,7 @@ nav ul {
 }
 
 nav ul li a {
-    color: var(--blue);
+    color: var(--hyperlink);
     text-decoration: none;
     padding: 0.25rem 0;
 }
@@ -167,13 +170,8 @@ img {
     gap: 0.5rem;
 }
 
-.post-meta time {
-    color: var(--blue);
-}
-
 .post-meta time::after {
     content: " :: ";
-    color: var(--white);
     margin: 0 0.25rem;
 }
 
@@ -188,24 +186,8 @@ img {
     display: inline-flex;
     align-items: center;
     background-color: var(--selection);
-    color: var(--blue);
     padding: 0.2rem 0.5rem;
-    border-radius: 3px;
     font-size: 0.75rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-
-.tag:hover {
-    background-color: var(--highlight-bg);
-    color: var(--green);
-    border-color: var(--green);
-}
-
-.tag.active {
-    background-color: var(--green);
-    color: var(--background);
-    border-color: var(--green);
 }
 
 /* Post Excerpts */
@@ -221,7 +203,7 @@ img {
 
 .read-more {
     display: inline-block;
-    color: var(--blue);
+    color: var(--hyperlink);
     text-decoration: none;
 }
 
@@ -280,7 +262,6 @@ img {
 .tag-header {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
 }
 
 .tag-description {
@@ -292,7 +273,6 @@ img {
 footer {
     margin-top: 3rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--border);
     color: var(--comment);
     font-size: 0.75rem;
 }

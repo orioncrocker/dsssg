@@ -11,7 +11,6 @@ help:
 
 deploy:
 	rsync -ahvuz site/* $(USERNAME)@$(REMOTE):$(DESTINATION)
-	rsync -ahvuz static $(USERNAME)@$(REMOTE):$(DESTINATION)
 
 clean:
 	rm -r site/*
@@ -21,4 +20,3 @@ build:
 
 local:
 	sudo rsync -auvt site/* /var/www/html
-	sudo rsync -auvt static /var/www/html

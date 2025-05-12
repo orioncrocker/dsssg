@@ -22,7 +22,8 @@ from jinja2 import Environment, FileSystemLoader
 # Configuration
 CONFIG = {
     'content_dir': 'content/posts',# Content files
-    'nav_dir': 'content/nav',    # Static nav files
+    'nav_dir': 'content/nav',    # Nav files
+    'static_dir': 'static',      # Static assets
     'output_dir': 'site',        # Generated HTML filepath
     'template_dir': 'templates', # HTML templates
     'tag_template': 'tag.html',  # Template for tag pages
@@ -513,7 +514,7 @@ def build_site():
         print("Tags overview page generated")
     
     # Copy static assets (CSS, JS, images, etc.)
-    static_dir = os.path.join(CONFIG['template_dir'], 'static')
+    static_dir = os.path.join(CONFIG['static_dir'])
     if os.path.exists(static_dir):
         shutil.copytree(
             static_dir, 

@@ -1,9 +1,7 @@
 /* Updated colors to match Monokai Pro scheme */
-/* Only changing colors, keeping all other styles the same */
-
 /* Variables for Monokai Pro colors */
 :root {
-    /* Main Monokai Pro Colors */
+    /* Main colors */
     --background: #2d2a2e;        /* Background */
     --foreground: #fcfcfa;        /* Main text */
     --comment: #727072;           /* Comments/subdued text */
@@ -18,13 +16,10 @@
     --purple: #ab9df2;            /* Special keywords */
 
     /* UI colors */
-    --border: #444444;            /* Borders, dividers */
-    --highlight-bg: #403e41;      /* Highlighted background */
-    --highlight-fg: #fcfcfa;      /* Highlighted text */
+    --border: #2d2a2e;            /* Borders, dividers */
+    --highlight-bg: #2d2a2e;      /* Highlighted background */
     --inactive: #939293;          /* Inactive text */
-
-    /* Code block colors */
-    --code-bg: #272822;  /* Slightly darker than the main background */
+    --code-bg: #272822;           /* Slightly darker than the main background */
 }
 
 /* Reset and Base Styles */
@@ -35,13 +30,14 @@
 }
 
 body {
-    font-family: "Courier New", Courier, monospace;
-    line-height: 1.6;
+    font-family: "Courier New", "JetBrains Mono", "Fira Mono", "Roboto Mono", "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 1rem;
     color: var(--foreground);
     background-color: var(--background);
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    letter-spacing: 0.01em;
 }
 
 /* Typography */
@@ -51,18 +47,12 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--foreground);
 }
 
-h1 {
-    font-size: 1.5rem;
-}
+h1 { font-size: 1.4rem; }
+h2 { font-size: 1.2rem; margin-top: 2rem; }
+h3 { font-size: 1.1rem; }
+h4, h5, h6 { font-size: 1rem; }
 
-h2 {
-    font-size: 1.25rem;
-    margin-top: 2rem;
-}
-
-p {
-    margin-bottom: 1rem;
-}
+p { margin-bottom: 1rem; }
 
 a {
     color: var(--blue);
@@ -73,25 +63,48 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Lists - common styles */
+ul, ol {
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+/* Code styling - base for all code elements */
 pre, code {
-    font-family: "Courier New", Courier, monospace;
-    background-color: var(--highlight-bg);
-    padding: 0.5rem;
+    font-family: inherit;
+    font-size: 0.9em;
+    background-color: var(--code-bg);
     border-radius: 3px;
     overflow-x: auto;
+    border: 1px solid var(--border);
+}
+
+pre {
+    padding: 1rem;
     margin: 1rem 0;
-    border: 1px solid var(--border); /* Add border */
 }
 
 code {
     padding: 0.2rem 0.4rem;
+    color: var(--blue);
+}
+
+/* Remove double styling for code inside pre blocks */
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    color: var(--foreground);
 }
 
 /* Header and Navigation */
 header {
     margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1rem;
 }
 
 header h1 {
@@ -106,6 +119,8 @@ nav ul {
     display: flex;
     list-style: none;
     gap: 1.5rem;
+    margin-left: 0;
+    padding-left: 0;
 }
 
 nav ul li a {
@@ -119,13 +134,12 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 
-/* Container */
+/* Container and Content Wrapper */
 .container {
     max-width: 100%;
     margin: 0 auto;
 }
 
-/* Content Wrapper */
 .content-wrapper {
     display: block;
 }
@@ -140,27 +154,17 @@ nav ul li a:hover {
 
 /* Post Summary */
 .post-summary {
-    background-color: var(--highlight-bg);
-    padding: 1rem;
     margin-bottom: 1.5rem;
 }
 
 .post-summary h3 {
     margin-top: 0;
     margin-bottom: 0.5rem;
-    font-size: 1.1rem;
 }
 
-.post-summary h3 a {
-    color: var(--yellow);
-}
-
-.post-summary h3 a:hover {
-    color: var(--green);
-}
-
+/* Post Metadata */
 .post-meta {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--inactive);
     margin-bottom: 1rem;
     display: flex;
@@ -193,7 +197,7 @@ nav ul li a:hover {
     color: var(--blue);
     padding: 0.2rem 0.5rem;
     border-radius: 3px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-decoration: none;
     border: 1px solid var(--border);
     transition: all 0.2s ease;
@@ -211,8 +215,9 @@ nav ul li a:hover {
     border-color: var(--green);
 }
 
-/* Post Content */
+/* Post Excerpts */
 .post-excerpt {
+    font-size: 0.95rem;
     margin-bottom: 1rem;
     color: var(--foreground);
 }
@@ -240,14 +245,12 @@ nav ul li a:hover {
 /* Single Post */
 .post {
     background-color: var(--highlight-bg);
-    border-left: 2px solid var(--green);
     padding: 1.5rem;
 }
 
 .post-header {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
 }
 
 .post-content {
@@ -274,65 +277,10 @@ nav ul li a:hover {
     border: 1px solid var(--border);
 }
 
-.post-content ul,
-.post-content ol {
-    margin-left: 1.5rem;  /* Add left margin to align with paragraphs */
-    padding-left: 1rem;   /* Add some padding between bullet/number and text */
-}
-
-.post-content li {
-    margin-bottom: 0.5rem;  /* Add space between list items */
-}
-
-/* Style for code blocks */
-.post-content pre,
-.post-excerpt pre {
-    background-color: var(--code-bg);
-    border-radius: 6px;
-    padding: 1rem;
-    overflow-x: auto;
-    margin: 1rem 0;
-    border: 1px solid var(--border); /* Add border */
-}
-
-/* Style for inline code */
-.post-content code,
-.post-excerpt code {
-    font-family: "Courier New", Courier, monospace;
-    background-color: var(--code-bg);
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    border: 1px solid var(--border); /* Add border */
-    font-size: 0.9em;
-    color: var(--blue);
-}
-
-/* Make sure code inside pre doesn't have double borders */
-.post-content pre code,
-.post-excerpt pre code {
-    background-color: transparent;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    color: var(--foreground);
-}
-
-/* Also fix alignment in post excerpts */
-.post-excerpt ul,
-.post-excerpt ol {
-    margin-left: 1.5rem;
-    padding-left: 1rem;
-}
-
-.post-excerpt li {
-    margin-bottom: 0.5rem;
-}
-
-/* Related Posts */
+/* Post Footer and Related Posts */
 .post-footer {
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--border);
 }
 
 .related-posts {
@@ -346,6 +294,8 @@ nav ul li a:hover {
 
 .related-posts ul {
     list-style: none;
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .related-posts li {
@@ -394,7 +344,7 @@ footer {
     padding-top: 1rem;
     border-top: 1px solid var(--border);
     color: var(--comment);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
 }
 
 /* Responsive */

@@ -12,13 +12,13 @@ To learn more visit <https://www.markdownguide.org/cheat-sheet>
 
 *This text is italicized*.
 
-> This text is blockquoted
-
 ### Image test:
 
-![cash-money](../static/images/godzilla.png)
+![this is a caption for the image](../static/images/godzilla.png)
 
 ### Code blocks:
+
+`This is a single line of code`
 
 To hear Tux's words of wisdom on your Linux machine at home:
 

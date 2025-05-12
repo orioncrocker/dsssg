@@ -52,17 +52,20 @@ def extract_front_matter(content):
     return {}, content
 
 def read_markdown_file(file_path):
-    """Read markdown file and extract front matter"""
+    """Read markdown file, extract front matter, and process content"""
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
         
     front_matter, content_without_front_matter = extract_front_matter(content)
     
-    # Convert remaining content to HTML
+    # Convert markdown to HTML
     html_content = markdown.markdown(
         content_without_front_matter,
         extensions=['fenced_code', 'tables', 'nl2br']
     )
+    
+    # Process image captions
+    html_content = process_image_captions(html_content)
     
     return front_matter, html_content
 
@@ -132,6 +135,41 @@ def process_tag(tag_name, tags_metadata):
     }
     
     return tag
+
+
+def process_image_captions(html_content):
+    """
+    Process HTML content to add captions to images based on their alt text.
+    Converts:
+    <img src="path/to/image" alt="This is a caption"> 
+    To:
+    <figure>
+        <img src="path/to/image" alt="This is a caption">
+        <figcaption>This is a caption</figcaption>
+    </figure>
+    """
+    import re
+    
+    # Pattern to match img tags with alt attributes
+    img_pattern = r'<img([^>]*?)alt="([^"]*)"([^>]*?)>'
+    
+    def add_caption(match):
+        # Get the parts of the img tag
+        before_alt = match.group(1)
+        alt_text = match.group(2)
+        after_alt = match.group(3)
+        
+        # If alt text is empty, just return the original img tag
+        if not alt_text.strip():
+            return f'<img{before_alt}alt="{alt_text}"{after_alt}>'
+        
+        # Create a figure with caption
+        return f'<figure>\n  <img{before_alt}alt="{alt_text}"{after_alt}>\n  <figcaption>{alt_text}</figcaption>\n</figure>'
+    
+    # Replace img tags with figure+figcaption
+    html_with_captions = re.sub(img_pattern, add_caption, html_content)
+    
+    return html_with_captions
 
 def build_site():
     """Build the site with tag support"""

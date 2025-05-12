@@ -10,37 +10,23 @@
             {% if tag.icon %}<span class="icon large-icon" {% if tag.color %}style="color: {{ tag.color }};"{% endif %}>{{ tag.icon }}</span>{% endif %}
             Posts tagged with "{{ tag.display_name }}"
         </h3>
-        
+
         {% if tag.description %}
         <div class="tag-description">
             {{ tag.description }}
         </div>
         {% endif %}
-        
+
         <div class="post-count">
             {{ posts|length }} post{% if posts|length != 1 %}s{% endif %}
         </div>
     </header>
-    
+
     <div class="post-list">
         {% for post in posts %}
         <article class="post-summary" {% if tag.color %}style="border-left: 4px solid {{ tag.color }};"{% endif %}>
             <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-            <div class="post-meta">
-                <time datetime="{{ post.date|date('c') }}">{{ post.date|date(site.date_format) }}</time>
-                {% if post.processed_tags %}
-                <div class="tags">
-                    {% for post_tag in post.processed_tags %}
-                    <a href="{{ post_tag.url }}" class="tag {% if post_tag.name == tag.name %}active{% endif %}" 
-                       {% if post_tag.color %}style="background-color: {% if post_tag.name == tag.name %}{{ post_tag.color }}{% else %}{{ post_tag.color }}30{% endif %}; 
-                                                   color: {% if post_tag.name == tag.name %}white{% else %}{{ post_tag.color }}{% endif %};"{% endif %}>
-                        {% if post_tag.icon %}<span class="icon">{{ post_tag.icon }}</span>{% endif %}
-                        {{ post_tag.display_name }}
-                    </a>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
+            {% include "post-meta.html" %}
             <div class="post-excerpt">
                 {{ post.content|striptags|safe_truncate()|safe }}
             </div>

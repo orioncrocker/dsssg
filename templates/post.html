@@ -2,13 +2,10 @@
 
 {% block title %}{{ post.title }} - {{ site.site_title }}{% endblock %}
 
-{% block description %}
-    {# Generate description from content - max 160 characters #}
-    {{ post.content|striptags|truncate(160)|trim }}
-{% endblock %}
+{% block description %}{{ post.content|regex_replace('<h[1-6][^>]*>.*?</h[1-6]>', '')|striptags|truncate(160)|trim }}{% endblock %}
 
 {% block og_title %}{{ post.title }}{% endblock %}
-{% block og_description %}{{ post.content|striptags|truncate(160)|trim }}{% endblock %}
+{% block og_description %}{{ post.content|regex_replace('<h[1-6][^>]*>.*?</h[1-6]>', '')|striptags|truncate(160)|trim }}{% endblock %}
 {% block og_type %}article{% endblock %}
 {% block og_url %}{{ site.site_url }}{{ post.url }}{% endblock %}
 
@@ -21,7 +18,7 @@
 {% block content %}
 <article class="post">
     <header class="post-header">
-        <h2>{{ post.title }}</h2>
+        <h1>{{ post.title }}</h1>
         {% include "post-meta.html" %}
     </header>
 

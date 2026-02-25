@@ -100,11 +100,9 @@ def read_markdown_file(file_path):
     
     return front_matter, html_content
 
-def get_post_date(front_matter, file_path):
+def get_post_date(front_matter):
     """Get post date from front matter, or empty string if not set"""
-    if 'date' in front_matter:
-        return front_matter['date']
-    return ""
+    return front_matter.get('date', "")
 
 def clean_output_directory():
     """Clean output directory"""
@@ -115,11 +113,11 @@ def clean_output_directory():
     os.makedirs(os.path.join(CONFIG['output_dir'], 'posts'), exist_ok=True)
 
 def generate_nav_url(slug):
-    """Generate URL for a post - now independent of tags"""
+    """Generate URL for a nav or root page"""
     return f"/{slug}.html"
 
 def generate_post_url(slug):
-    """Generate URL for a post - now independent of tags"""
+    """Generate URL for a post"""
     return f"/posts/{slug}.html"
 
 def generate_tag_url(tag):
@@ -160,7 +158,6 @@ def process_tag(tag_name, tags_metadata):
         'description': metadata.get('description', ''),
         'color': metadata.get('color', None),
         'icon': metadata.get('icon', None),
-        'order': metadata.get('order', 999),
         'url': generate_tag_url(slug)
     }
     
@@ -234,31 +231,6 @@ def build_site():
         Safely truncate HTML content to approximately 'length' characters
         while preserving valid HTML structure and code blocks
         """
-        
-        # Pre-process to handle markdown code blocks that might not be in HTML yet
-        # Protect code blocks with special markers
-        protected_content = html_content
-        
-        # First, handle fenced code blocks ```code``` and preserve them
-        code_block_pattern = r'```(?:[a-zA-Z0-9]+)?\n(.*?)\n```'
-        code_blocks = []
-        
-        def save_code_block(match):
-            code_blocks.append(match.group(0))
-            return f"CODE_BLOCK_PLACEHOLDER_{len(code_blocks) - 1}"
-        
-        protected_content = re.sub(code_block_pattern, save_code_block, protected_content, flags=re.DOTALL)
-        
-        # Then, handle inline code `code` and preserve them
-        inline_code_pattern = r'`([^`]+)`'
-        inline_codes = []
-        
-        def save_inline_code(match):
-            inline_codes.append(match.group(0))
-            return f"INLINE_CODE_PLACEHOLDER_{len(inline_codes) - 1}"
-        
-        protected_content = re.sub(inline_code_pattern, save_inline_code, protected_content)
-        
         class HTMLTruncator(HTMLParser):
             def __init__(self, max_length):
                 super().__init__()
@@ -312,48 +284,7 @@ def build_site():
             def handle_data(self, data):
                 if self.truncated:
                     return
-                
-                # Check if this is a code block placeholder
-                code_block_match = re.match(r'CODE_BLOCK_PLACEHOLDER_(\d+)', data)
-                if code_block_match:
-                    # This is a code block placeholder, replace it with the actual code
-                    index = int(code_block_match.group(1))
-                    if index < len(code_blocks):
-                        # For code blocks, we count them as a fixed number of characters
-                        # to avoid them taking up the entire excerpt
-                        code_chars = 50  # Count code blocks as 50 chars regardless of actual length
-                        
-                        if self.char_count + code_chars <= self.max_length:
-                            # We can include a shortened version of this code block
-                            code_preview = code_blocks[index]
-                            # Limit the code block to a reasonable preview
-                            if len(code_preview) > 100:
-                                code_lines = code_preview.split('\n')
-                                if len(code_lines) > 3:
-                                    code_preview = '\n'.join(code_lines[:3]) + '\n...'
-                            
-                            self.output.append(code_preview)
-                            self.char_count += code_chars
-                        else:
-                            # Not enough space for the code block
-                            self.truncated = True
-                    return
-                
-                # Check if this is an inline code placeholder
-                inline_code_match = re.match(r'INLINE_CODE_PLACEHOLDER_(\d+)', data)
-                if inline_code_match:
-                    index = int(inline_code_match.group(1))
-                    if index < len(inline_codes):
-                        code = inline_codes[index]
-                        # For inline code, count the actual length
-                        if self.char_count + len(code) <= self.max_length:
-                            self.output.append(code)
-                            self.char_count += len(code)
-                        else:
-                            # Not enough space for the inline code
-                            self.truncated = True
-                    return
-                
+
                 # Count only visible characters
                 data_length = len(data)
                 remaining = self.max_length - self.char_count
@@ -393,24 +324,11 @@ def build_site():
                 return output_str
         
         # Remove problematic elements before parsing
-        cleaned_html = re.sub(r'<(script|style|iframe).*?</\1>|<head>.*?</head>', '', protected_content, flags=re.DOTALL)
-        
+        cleaned_html = re.sub(r'<(script|style|iframe).*?</\1>|<head>.*?</head>', '', html_content, flags=re.DOTALL)
+
         truncator = HTMLTruncator(length)
         truncator.feed(cleaned_html)
-        truncated_html = truncator.get_truncated_html()
-        
-        # Post-process to restore any code placeholders that might still be in the truncated text
-        for i, code in enumerate(code_blocks):
-            placeholder = f"CODE_BLOCK_PLACEHOLDER_{i}"
-            if placeholder in truncated_html:
-                truncated_html = truncated_html.replace(placeholder, code)
-        
-        for i, code in enumerate(inline_codes):
-            placeholder = f"INLINE_CODE_PLACEHOLDER_{i}"
-            if placeholder in truncated_html:
-                truncated_html = truncated_html.replace(placeholder, code)
-        
-        return truncated_html
+        return truncator.get_truncated_html()
 
     def process_markdown(directory, is_nav=False, target=None):
         # Process all markdown files in content directory
@@ -429,7 +347,7 @@ def build_site():
                     title = front_matter.get('title', slug)
 
                     # Get post date
-                    date = get_post_date(front_matter, file_path)
+                    date = get_post_date(front_matter)
 
                     # Get tags (defaulting to empty list)
                     tags = front_matter.get('tags', [])
@@ -634,7 +552,6 @@ def build_site():
             from PIL import Image
             max_width = CONFIG['image_max_width']
             jpeg_quality = CONFIG['image_quality']
-            images_optimized = 0
             for root, _, files in os.walk(images_dir):
                 for file in files:
                     src_path = os.path.join(root, file)

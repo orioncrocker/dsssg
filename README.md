@@ -197,6 +197,39 @@ All templates receive `site` (all config values) and `tags` (all tag objects). A
 
 ---
 
+## Fonts
+
+dsssg uses a system monospace font stack by default. To use a self-hosted web font instead:
+
+1. Download `.woff2` files for your chosen font. For a FOSS option, [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono/releases) ships a variable font that covers all weights in a single file.
+
+2. Place the `.woff2` file(s) in `static/fonts/`.
+
+3. Add an `@font-face` block to your `static/css/style.css` and update the `font-family` stack:
+
+```css
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("/static/fonts/JetBrainsMono[wght].woff2") format("woff2");
+    font-weight: 100 800;
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("/static/fonts/JetBrainsMono-Italic[wght].woff2") format("woff2");
+    font-weight: 100 800;
+    font-style: italic;
+}
+
+body {
+    font-family: "JetBrains Mono", monospace;
+}
+```
+
+`.woff2` is supported by all modern browsers. A variable font is preferred as it covers all weights in a single file, reducing requests.
+
+---
+
 ## Output Structure
 
 ```

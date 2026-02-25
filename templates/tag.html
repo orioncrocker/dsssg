@@ -46,7 +46,7 @@
             <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
             {% include "post-meta.html" %}
             <div class="post-excerpt">
-                {{ post.content|striptags|safe_truncate()|safe }}
+                {{ post.content|striptags_excerpt|safe_truncate()|safe }}
             </div>
             <a href="{{ post.url }}" class="read-more">Read more</a>
         </article>

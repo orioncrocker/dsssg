@@ -218,7 +218,7 @@ def build_site():
         return re.sub(pattern, replacement, value)
 
     def striptags_excerpt(value):
-        """Strip all HTML tags except <pre> blocks and hyperlinks"""
+        """Strip all HTML tags except <pre> blocks and hyperlinks. Removes figures entirely."""
         if value is None:
             return ''
         pre_blocks = []
@@ -226,6 +226,7 @@ def build_site():
             pre_blocks.append(match.group(0))
             return f'\x00PRE{len(pre_blocks) - 1}\x00'
         result = re.sub(r'<pre>.*?</pre>', save_pre, value, flags=re.DOTALL)
+        result = re.sub(r'<figure>.*?</figure>', '', result, flags=re.DOTALL)
         # Strip all tags except <a ...> and </a>
         result = re.sub(r'<(?!/?a[\s>])[^>]+>', '', result)
         for i, block in enumerate(pre_blocks):

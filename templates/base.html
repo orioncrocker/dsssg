@@ -23,6 +23,9 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="{% block canonical %}{{ site.site_url }}{% endblock %}">
 
+    <!-- RSS feed autodiscovery -->
+    <link rel="alternate" type="application/rss+xml" title="{{ site.site_title }}" href="{{ site.site_url }}/feed.xml">
+
     <!-- CSS and other assets -->
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}

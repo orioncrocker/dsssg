@@ -477,6 +477,44 @@ def build_site():
     # Generate robots.txt
     write_page('robots.txt', f"User-agent: *\nAllow: /\n\nSitemap: {site_url}/sitemap.xml\n")
 
+    # Generate RSS feed
+    def to_rfc2822(date):
+        if hasattr(date, 'strftime'):
+            return date.strftime('%a, %d %b %Y 00:00:00 +0000')
+        if isinstance(date, str) and date:
+            try:
+                return datetime.strptime(date[:10], '%Y-%m-%d').strftime('%a, %d %b %Y 00:00:00 +0000')
+            except ValueError:
+                pass
+        return ''
+
+    rss_lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+        '  <channel>',
+        f'    <title>{CONFIG["site_title"]}</title>',
+        f'    <link>{site_url}/</link>',
+        f'    <description>{CONFIG["site_description"]}</description>',
+        '    <language>en</language>',
+        f'    <lastBuildDate>{to_rfc2822(datetime.now())}</lastBuildDate>',
+        f'    <atom:link href="{site_url}/feed.xml" rel="self" type="application/rss+xml"/>',
+    ]
+    for post in posts:
+        pub_date = to_rfc2822(post['date'])
+        post_url = f"{site_url}{post['url']}"
+        rss_lines += [
+            '    <item>',
+            f'      <title>{post["title"]}</title>',
+            f'      <link>{post_url}</link>',
+            f'      <guid>{post_url}</guid>',
+        ]
+        if pub_date:
+            rss_lines.append(f'      <pubDate>{pub_date}</pubDate>')
+        rss_lines.append(f'      <description><![CDATA[{post["content"]}]]></description>')
+        rss_lines.append('    </item>')
+    rss_lines += ['  </channel>', '</rss>']
+    write_page('feed.xml', '\n'.join(rss_lines))
+
     # Copy static assets
     static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):

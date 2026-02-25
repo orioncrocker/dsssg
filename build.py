@@ -27,6 +27,7 @@ import shutil
 import markdown
 from collections import defaultdict
 from datetime import datetime
+from html.parser import HTMLParser
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -100,7 +101,7 @@ def read_markdown_file(file_path):
     return front_matter, html_content
 
 def get_post_date(front_matter, file_path):
-    """Get post date from front matter or file modification time"""
+    """Get post date from front matter, or empty string if not set"""
     if 'date' in front_matter:
         return front_matter['date']
     return ""
@@ -159,7 +160,6 @@ def process_tag(tag_name, tags_metadata):
         'description': metadata.get('description', ''),
         'color': metadata.get('color', None),
         'icon': metadata.get('icon', None),
-        'featured': metadata.get('featured', False),
         'order': metadata.get('order', 999),
         'url': generate_tag_url(slug)
     }
@@ -170,15 +170,13 @@ def process_image_captions(html_content):
     """
     Process HTML content to add captions to images based on their alt text.
     Converts:
-    <img src="path/to/image" alt="This is a caption"> 
+    <img src="path/to/image" alt="This is a caption">
     To:
     <figure>
         <img src="path/to/image" alt="This is a caption">
         <figcaption>This is a caption</figcaption>
     </figure>
     """
-    import re
-    
     # Pattern to match img tags with alt attributes
     img_pattern = r'<img([^>]*?)alt="([^"]*)"([^>]*?)>'
     
@@ -220,15 +218,13 @@ def build_site():
 
     def regex_search(value, pattern):
         """Search for a pattern in a string"""
-        import re
         if value is None:
             return ''
         match = re.search(pattern, value)
         return match.group(0) if match else ''
-    
+
     def regex_replace(value, pattern, replacement):
         """Replace a pattern in a string"""
-        import re
         if value is None:
             return ''
         return re.sub(pattern, replacement, value)
@@ -238,8 +234,6 @@ def build_site():
         Safely truncate HTML content to approximately 'length' characters
         while preserving valid HTML structure and code blocks
         """
-        from html.parser import HTMLParser
-        import re
         
         # Pre-process to handle markdown code blocks that might not be in HTML yet
         # Protect code blocks with special markers
@@ -546,7 +540,6 @@ def build_site():
             f.write(html)
 
     # Generate post pages
-    post_template = env.get_template(CONFIG['post_template'])
     for post in posts:
         # Process tags for this post
         post_tags = []
@@ -583,8 +576,7 @@ def build_site():
         tag = processed_tags[tag_name]
         
         # Generate output path
-        tag_slug = tag_name.lower().replace(' ', '-')
-        output_path = os.path.join(CONFIG['output_dir'], f"tags/{tag_slug}.html")
+        output_path = os.path.join(CONFIG['output_dir'], f"tags/{tag['slug']}.html")
         
         # Render tag template
         html = tag_template.render(
@@ -634,6 +626,7 @@ def build_site():
         )
 
     # Copy and optimize site images
+    images_optimized = 0
     images_dir = CONFIG['images_dir']
     if os.path.exists(images_dir):
         output_images_dir = os.path.join(CONFIG['output_dir'], 'images')
@@ -665,7 +658,6 @@ def build_site():
                         shutil.copy2(src_path, dst_path)
         else:
             shutil.copytree(images_dir, output_images_dir, dirs_exist_ok=True)
-            images_optimized = 0
 
     elapsed = (datetime.now() - start_time).total_seconds()
     images_str = f", and optimized {images_optimized} images" if images_optimized else ""

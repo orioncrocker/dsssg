@@ -1,22 +1,20 @@
 #!/usr/bin/make -f
 
-USERNAME=''
-REMOTE=''
-DESTINATION=''
+-include .env
 
-.PHONY: help build clean deploy
+.PHONY: help build clean deploy local
 
 help:
-	$(info make build|clean|remote)
+	$(info make build|clean|local|deploy)
 
-deploy:
-	rsync -ahvuz site/* $(USERNAME)@$(REMOTE):$(DESTINATION)
+build:
+	uv run build.py
 
 clean:
 	rm -rf site/*
 
-build:
-	python3 build.py
-
 local:
-	sudo rsync -auvt site/* /var/www/html
+	sudo rsync -auv site/* /var/www/html
+
+deploy:
+	rsync -ahvuz site/* $(DEPLOY_USER)@$(DEPLOY_HOST):$(DEPLOY_PATH)

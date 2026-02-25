@@ -474,6 +474,9 @@ def build_site():
     lines.append('</urlset>')
     write_page('sitemap.xml', '\n'.join(lines))
 
+    # Generate robots.txt
+    write_page('robots.txt', f"User-agent: *\nAllow: /\n\nSitemap: {site_url}/sitemap.xml\n")
+
     # Copy static assets
     static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):

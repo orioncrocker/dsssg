@@ -20,6 +20,9 @@
     <meta property="og:url" content="{% block og_url %}{{ site.site_url }}{% endblock %}">
     {% block og_image %}{% endblock %}
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical %}{{ site.site_url }}{% endblock %}">
+
     <!-- CSS and other assets -->
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}

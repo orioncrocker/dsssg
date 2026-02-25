@@ -19,6 +19,7 @@
     {% endif %}
 {% endblock %}
 {% block og_url %}{{ site.site_url }}{{ tag.url }}{% endblock %}
+{% block canonical %}{{ site.site_url }}{{ tag.url }}{% endblock %}
 
 {% block content %}
 <section class="tag-archive">

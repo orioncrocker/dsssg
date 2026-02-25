@@ -48,6 +48,7 @@ def load_config():
         'tags_file': 'tags.yaml',
         'images_dir': 'images',
         'static_override_dir': 'static',
+        'root_dir': 'root',
     }
     config_path = sys.argv[1] if len(sys.argv) > 1 else 'config.yaml'
     if os.path.exists(config_path):
@@ -396,7 +397,7 @@ def build_site():
         
         return truncated_html
 
-    def process_markdown(directory, is_nav=False):
+    def process_markdown(directory, is_nav=False, target=None):
         # Process all markdown files in content directory
         for root, _, files in os.walk(CONFIG[directory]):
             for file in files:
@@ -447,7 +448,7 @@ def build_site():
                         for tag in tags:
                             tags_to_posts[tag].append(post)
                     else:
-                        nav_pages.append(post)
+                        (target if target is not None else nav_pages).append(post)
 
     env.filters['date'] = date_filter
     env.filters['safe_truncate'] = safe_html_truncate
@@ -464,11 +465,14 @@ def build_site():
     # Collect all posts and organize by tags
     posts = []
     nav_pages = []
+    root_pages = []
     tags_to_posts = defaultdict(list)
     all_tags = set()
 
     process_markdown('content_dir')
     process_markdown('nav_dir', True)
+    if os.path.exists(CONFIG['root_dir']):
+        process_markdown('root_dir', is_nav=True, target=root_pages)
 
     env.globals['nav_pages'] = nav_pages
 
@@ -499,6 +503,19 @@ def build_site():
         )
 
         # Write to file
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+
+    # Generate root pages (rendered like nav pages, not listed in navbar)
+    for post in root_pages:
+        output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        html = post_template.render(
+            post=post,
+            site=CONFIG,
+            posts=posts,
+            tags=list(processed_tags.values())
+        )
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
 

@@ -442,7 +442,38 @@ def build_site():
     if os.path.exists(os.path.join(CONFIG['template_dir'], CONFIG['tags_template'])):
         tags_template = env.get_template(CONFIG['tags_template'])
         write_page('tags.html', tags_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
-    
+
+    # Generate sitemap.xml
+    site_url = CONFIG['site_url'].rstrip('/')
+    sitemap_entries = [
+        {'loc': f"{site_url}/", 'priority': '1.0'},
+        {'loc': f"{site_url}/tags.html", 'priority': '0.5'},
+    ]
+    for post in posts:
+        entry = {'loc': f"{site_url}{post['url']}", 'priority': '0.8'}
+        date = post['date']
+        if hasattr(date, 'strftime'):
+            entry['lastmod'] = date.strftime('%Y-%m-%d')
+        elif isinstance(date, str) and date:
+            entry['lastmod'] = date[:10]
+        sitemap_entries.append(entry)
+    for page in nav_pages:
+        sitemap_entries.append({'loc': f"{site_url}{page['url']}", 'priority': '0.6'})
+    for tag in processed_tags.values():
+        sitemap_entries.append({'loc': f"{site_url}{tag['url']}", 'priority': '0.5'})
+
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for entry in sitemap_entries:
+        lines.append('  <url>')
+        lines.append(f"    <loc>{entry['loc']}</loc>")
+        if 'lastmod' in entry:
+            lines.append(f"    <lastmod>{entry['lastmod']}</lastmod>")
+        lines.append(f"    <priority>{entry['priority']}</priority>")
+        lines.append('  </url>')
+    lines.append('</urlset>')
+    write_page('sitemap.xml', '\n'.join(lines))
+
     # Copy static assets
     static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):

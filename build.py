@@ -411,82 +411,37 @@ def build_site():
 
     all_tags_list = list(processed_tags.values())
 
-    # Generate nav pages
+    def write_page(url, html):
+        output_path = os.path.join(CONFIG['output_dir'], url.lstrip('/'))
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+
     post_template = env.get_template(CONFIG['post_template'])
-    for post in nav_pages:
-        # Generate output path
-        output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-        # Render post template
-        html = post_template.render(
-            post=post,
-            site=CONFIG,
-            tags=all_tags_list
-        )
-
-        # Write to file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
-
-    # Generate root pages (rendered like nav pages, not listed in navbar)
-    for post in root_pages:
-        output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        html = post_template.render(
-            post=post,
-            site=CONFIG,
-            tags=all_tags_list
-        )
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
+    # Generate nav and root pages
+    for post in nav_pages + root_pages:
+        write_page(post['url'], post_template.render(post=post, site=CONFIG, tags=all_tags_list))
 
     # Generate post pages
     for post in posts:
-        # Process tags for this post
         post['processed_tags'] = [processed_tags[t] for t in post['tags'] if t in processed_tags]
-
-        # Generate output path
-        output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-        # Render post template
-        html = post_template.render(
-            post=post,
-            site=CONFIG,
-            posts=posts,
-            tags=all_tags_list
-        )
-
-        # Write to file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
+        write_page(post['url'], post_template.render(post=post, site=CONFIG, posts=posts, tags=all_tags_list))
 
     # Generate tag pages
     tag_template = env.get_template(CONFIG['tag_template'])
     for tag_name, tag_posts in tags_to_posts.items():
         tag_posts.sort(key=lambda x: x['date'], reverse=True)
         tag = processed_tags[tag_name]
-        output_path = os.path.join(CONFIG['output_dir'], f"tags/{tag['slug']}.html")
-        html = tag_template.render(
-            tag=tag,
-            posts=tag_posts,
-            site=CONFIG,
-            tags=all_tags_list
-        )
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
+        write_page(tag['url'], tag_template.render(tag=tag, posts=tag_posts, site=CONFIG, tags=all_tags_list))
 
-    # Generate index page
+    # Generate index and tags overview pages
     index_template = env.get_template(CONFIG['index_template'])
-    with open(os.path.join(CONFIG['output_dir'], 'index.html'), 'w', encoding='utf-8') as f:
-        f.write(index_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
+    write_page('index.html', index_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
 
-    # Generate tags overview page
     if os.path.exists(os.path.join(CONFIG['template_dir'], CONFIG['tags_template'])):
         tags_template = env.get_template(CONFIG['tags_template'])
-        with open(os.path.join(CONFIG['output_dir'], 'tags.html'), 'w', encoding='utf-8') as f:
-            f.write(tags_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
+        write_page('tags.html', tags_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
     
     # Copy static assets
     static_dir = CONFIG['static_dir']

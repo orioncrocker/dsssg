@@ -47,6 +47,7 @@ def load_config():
         'date_format': '%Y-%m-%d',
         'tags_file': 'tags.yaml',
         'images_dir': 'images',
+        'static_override_dir': 'static',
     }
     config_path = sys.argv[1] if len(sys.argv) > 1 else 'config.yaml'
     if os.path.exists(config_path):
@@ -573,11 +574,18 @@ def build_site():
             f.write(tags_html)
         print("Tags overview page generated")
     
-    # Copy static assets (CSS, JS, etc.)
+    # Copy static assets: submodule base first, then site overrides on top
     static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):
         shutil.copytree(
             static_dir,
+            os.path.join(CONFIG['output_dir'], 'static'),
+            dirs_exist_ok=True
+        )
+    static_override_dir = CONFIG['static_override_dir']
+    if os.path.exists(static_override_dir):
+        shutil.copytree(
+            static_override_dir,
             os.path.join(CONFIG['output_dir'], 'static'),
             dirs_exist_ok=True
         )

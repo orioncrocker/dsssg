@@ -58,7 +58,6 @@ def load_config():
         with open(config_path, 'r', encoding='utf-8') as f:
             user_config = yaml.safe_load(f) or {}
         defaults.update(user_config)
-        print(f"Loaded config from {config_path}")
     return defaults
 
 
@@ -129,11 +128,8 @@ def load_tag_metadata():
         try:
             with open(tags_file_path, 'r', encoding='utf-8') as f:
                 tags_metadata = yaml.safe_load(f) or {}
-            print(f"Loaded metadata for {len(tags_metadata)} tags from {CONFIG['tags_file']}")
         except Exception as e:
             print(f"Error loading tags metadata: {e}")
-    else:
-        print(f"Tags file {CONFIG['tags_file']} not found, proceeding without tag metadata")
     
     return tags_metadata
 
@@ -426,7 +422,6 @@ def build_site():
         html = post_template.render(
             post=post,
             site=CONFIG,
-            posts=posts,
             tags=all_tags_list
         )
 
@@ -441,7 +436,6 @@ def build_site():
         html = post_template.render(
             post=post,
             site=CONFIG,
-            posts=posts,
             tags=all_tags_list
         )
         with open(output_path, 'w', encoding='utf-8') as f:

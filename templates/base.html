@@ -44,7 +44,9 @@
 
     <footer>
         <div class="container">
-            <p>&copy; {{ now.year }} {{ site.author|default(site.site_title) }}. All rights reserved.</p>
+            <p>&copy; {{ now.year }} {{ site.author|default(site.site_title) }} |
+            {% if site.footer_text %}{{ site.footer_text | safe }}</p>{% endif %}
+            {% if site.footer_credit %}<p>{{ site.footer_credit | safe }}</p>{% endif %}
         </div>
     </footer>
 </body>

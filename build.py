@@ -425,6 +425,10 @@ def build_site():
                     # Track all tags used
                     all_tags.update(tags)
 
+                    # Extract first image from content for use as thumbnail
+                    thumbnail_match = re.search(r'<img[^>]+src="([^"]+)"', html_content)
+                    thumbnail = thumbnail_match.group(1) if thumbnail_match else None
+
                     # Create post object
                     post = {
                         'title': title,
@@ -432,7 +436,8 @@ def build_site():
                         'tags': tags,
                         'content': html_content,
                         'slug': slug,
-                        'url': generate_nav_url(slug) if is_nav else generate_post_url(slug)
+                        'url': generate_nav_url(slug) if is_nav else generate_post_url(slug),
+                        'thumbnail': thumbnail,
                     }
 
                     if is_nav is False:

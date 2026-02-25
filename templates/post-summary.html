@@ -1,0 +1,11 @@
+<article class="post-summary">
+    <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+    {% include "post-meta.html" %}
+    {% if post.thumbnail %}
+    <img src="{{ post.thumbnail }}" alt="{{ post.title }}">
+    {% endif %}
+    <div class="post-excerpt">
+        {{ post.content|striptags_excerpt|safe_truncate()|safe }}
+    </div>
+    <a href="{{ post.url }}" class="read-more">Read more</a>
+</article>

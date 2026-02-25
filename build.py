@@ -5,6 +5,7 @@
 #   "PyYAML",
 #   "Markdown",
 #   "Jinja2",
+#   "Pillow",
 # ]
 # ///
 """
@@ -51,6 +52,9 @@ def load_config():
         'root_dir': 'root',
         'footer_text': None,
         'footer_credit': None,
+        'image_optimize': False,
+        'image_max_width': 1200,
+        'image_quality': 85,
     }
     config_path = sys.argv[1] if len(sys.argv) > 1 else 'config.yaml'
     if os.path.exists(config_path):
@@ -628,14 +632,36 @@ def build_site():
             dirs_exist_ok=True
         )
 
-    # Copy site images
+    # Copy and optimize site images
     images_dir = CONFIG['images_dir']
     if os.path.exists(images_dir):
-        shutil.copytree(
-            images_dir,
-            os.path.join(CONFIG['output_dir'], 'images'),
-            dirs_exist_ok=True
-        )
+        output_images_dir = os.path.join(CONFIG['output_dir'], 'images')
+        if CONFIG['image_optimize']:
+            from PIL import Image
+            max_width = CONFIG['image_max_width']
+            jpeg_quality = CONFIG['image_quality']
+            for root, _, files in os.walk(images_dir):
+                for file in files:
+                    src_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(src_path, images_dir)
+                    dst_path = os.path.join(output_images_dir, rel_path)
+                    os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+                    try:
+                        with Image.open(src_path) as img:
+                            if img.width > max_width:
+                                ratio = max_width / img.width
+                                img = img.resize((max_width, int(img.height * ratio)), Image.LANCZOS)
+                            ext = os.path.splitext(file)[1].lower()
+                            if ext in ('.jpg', '.jpeg'):
+                                img.save(dst_path, 'JPEG', quality=jpeg_quality, optimize=True)
+                            elif ext == '.png':
+                                img.save(dst_path, 'PNG', optimize=True)
+                            else:
+                                img.save(dst_path)
+                    except Exception:
+                        shutil.copy2(src_path, dst_path)
+        else:
+            shutil.copytree(images_dir, output_images_dir, dirs_exist_ok=True)
     
     print(f"Site built successfully with {len(posts)} posts and {len(processed_tags)} tags")
 

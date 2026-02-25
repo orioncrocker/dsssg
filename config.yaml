@@ -11,3 +11,5 @@ tags_file: "tags.yaml"
 
 # images_dir: "images"       # Directory of images copied to site/images/
 # root_dir: "root"           # Pages built with site template but excluded from navbar (e.g. 404)
+# author: ""                 # Default post author
+# date_format: "%B %d, %Y"  # strftime format for displayed dates

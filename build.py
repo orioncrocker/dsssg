@@ -44,6 +44,7 @@ def load_config():
         'site_title': 'My Website',
         'site_description': 'A tagged website built with dsssg',
         'site_url': 'https://example.com',
+        'author': None,
         'date_format': '%Y-%m-%d',
         'tags_file': 'tags.yaml',
         'images_dir': 'images',
@@ -159,7 +160,6 @@ def process_tag(tag_name, tags_metadata):
     
     return tag
 
-
 def process_image_captions(html_content):
     """
     Process HTML content to add captions to images based on their alt text.
@@ -210,6 +210,21 @@ def build_site():
         if isinstance(date_value, datetime):
             return date_value.strftime(format_string)
         return date_value
+
+    def regex_search(value, pattern):
+        """Search for a pattern in a string"""
+        import re
+        if value is None:
+            return ''
+        match = re.search(pattern, value)
+        return match.group(0) if match else ''
+    
+    def regex_replace(value, pattern, replacement):
+        """Replace a pattern in a string"""
+        import re
+        if value is None:
+            return ''
+        return re.sub(pattern, replacement, value)
     
     def safe_html_truncate(html_content, length=700):
         """
@@ -451,6 +466,8 @@ def build_site():
 
     env.filters['date'] = date_filter
     env.filters['safe_truncate'] = safe_html_truncate
+    env.filters['regex_search'] = regex_search
+    env.filters['regex_replace'] = regex_replace
 
     # Add current date to templates
     env.globals['now'] = datetime.now()

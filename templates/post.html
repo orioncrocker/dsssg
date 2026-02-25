@@ -1,7 +1,22 @@
 {% extends "base.html" %}
 
 {% block title %}{{ post.title }} - {{ site.site_title }}{% endblock %}
-{% block description %}{{ post.content|striptags|truncate(160) }}{% endblock %}
+
+{% block description %}
+    {# Generate description from content - max 160 characters #}
+    {{ post.content|striptags|truncate(160)|trim }}
+{% endblock %}
+
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.content|striptags|truncate(160)|trim }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_url %}{{ site.site_url }}{{ post.url }}{% endblock %}
+
+{% block og_image %}
+    {% if post.thumbnail %}
+    <meta property="og:image" content="{{ site.site_url }}{{ post.thumbnail }}">
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 <article class="post">

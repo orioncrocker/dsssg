@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}{{ site.site_title }} - Home{% endblock %}
+{% block title %}{{ site.site_title }} - {{ site.site_tagline|default('Home') }}{% endblock %}
+
+{% block description %}
+    {{ site.site_description }}
+{% endblock %}
+
+{% block og_title %}{{ site.site_title }}{% endblock %}
+{% block og_description %}{{ site.site_description }}{% endblock %}
+{% block og_url %}{{ site.site_url }}/{% endblock %}
 
 {% block content %}
 <div class="content-wrapper">

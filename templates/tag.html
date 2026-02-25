@@ -1,14 +1,31 @@
 {% extends "base.html" %}
 
 {% block title %}{{ tag.display_name }} - {{ site.site_title }}{% endblock %}
-{% block description %}{{ tag.description|default('Posts tagged with ' ~ tag.display_name ~ ' on ' ~ site.site_title) }}{% endblock %}
+
+{% block description %}
+    {% if tag.description %}
+        {{ tag.description|truncate(160)|trim }}
+    {% else %}
+        Browse {{ posts|length }} posts tagged with {{ tag.display_name }} on {{ site.site_title }}.
+    {% endif %}
+{% endblock %}
+
+{% block og_title %}{{ tag.display_name }} - {{ site.site_title }}{% endblock %}
+{% block og_description %}
+    {% if tag.description %}
+        {{ tag.description|truncate(160)|trim }}
+    {% else %}
+        Browse {{ posts|length }} posts tagged with {{ tag.display_name }} on {{ site.site_title }}.
+    {% endif %}
+{% endblock %}
+{% block og_url %}{{ site.site_url }}{{ tag.url }}{% endblock %}
 
 {% block content %}
 <section class="tag-archive">
     <div class="tag-header">
         <h3>
             {% if tag.icon %}<span class="icon large-icon" {% if tag.color %}style="color: {{ tag.color }};"{% endif %}>{{ tag.icon }}</span>{% endif %}
-            Posts tagged with "{{ tag.display_name }}"
+            {{ tag.display_name }}
         </h3>
 
         {% if tag.description %}

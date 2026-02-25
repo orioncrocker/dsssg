@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}Tags - {{ site.site_title }}{% endblock %}
-{% block description %}Browse all tags on {{ site.site_title }}{% endblock %}
+
+{% block og_title %}Tags - {{ site.site_title }}{% endblock %}
+{% block og_description %}Browse all {{ tags|length }} topics on {{ site.site_title }}.{% endblock %}
+{% block og_url %}{{ site.site_url }}/tags.html{% endblock %}
 
 {% block content %}
 <section class="tags-page">

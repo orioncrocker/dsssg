@@ -399,7 +399,7 @@ def build_site():
     env.globals['nav_pages'] = nav_pages
 
     # Sort posts by date (newest first)
-    posts.sort(key=lambda x: x['date'], reverse=True)
+    posts.sort(key=lambda x: date_filter(x['date']), reverse=True)
     nav_pages.sort(key=lambda x: (x['nav_order'] is None, x['nav_order']))
     
     # Process tag objects for templates
@@ -432,7 +432,7 @@ def build_site():
     # Generate tag pages
     tag_template = env.get_template(CONFIG['tag_template'])
     for tag_name, tag_posts in tags_to_posts.items():
-        tag_posts.sort(key=lambda x: x['date'], reverse=True)
+        tag_posts.sort(key=lambda x: date_filter(x['date']), reverse=True)
         tag = processed_tags[tag_name]
         write_page(tag['url'], tag_template.render(tag=tag, posts=tag_posts, site=CONFIG, tags=all_tags_list))
 

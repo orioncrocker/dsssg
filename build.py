@@ -450,6 +450,7 @@ def build_site():
                     post = {
                         'title': title,
                         'hide_title': front_matter.get('hide_title', False),
+                        'nav_order': front_matter.get('nav_order', None),
                         'date': date,
                         'tags': tags,
                         'content': html_content,
@@ -497,6 +498,7 @@ def build_site():
 
     # Sort posts by date (newest first)
     posts.sort(key=lambda x: x['date'], reverse=True)
+    nav_pages.sort(key=lambda x: (x['nav_order'] is None, x['nav_order']))
     
     # Process tag objects for templates
     processed_tags = {}

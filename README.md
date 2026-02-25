@@ -139,12 +139,15 @@ Same format as posts. These are rendered with the site template and linked in th
 ---
 title: About
 hide_title: true
+nav_order: 1
 ---
 
 Content here. The page title won't be rendered as an h1.
 ```
 
 Use `hide_title: true` to suppress the template-rendered `<h1>` (useful when your content already opens with a heading or you want full control over the layout).
+
+Use `nav_order` to control the position of the page in the navbar. Pages are sorted numerically, lowest first. Pages without `nav_order` set will appear last.
 
 ### Root Pages (`root_dir`)
 

@@ -200,7 +200,7 @@ def build_site():
                 date_value = datetime.strptime(date_value, "%Y-%m-%d")
             except ValueError:
                 return date_value
-        if isinstance(date_value, datetime):
+        if hasattr(date_value, 'strftime'):
             return date_value.strftime(format_string)
         return date_value
 

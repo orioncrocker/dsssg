@@ -10,11 +10,9 @@
 {% block og_url %}{{ site.site_url }}{{ post.url }}{% endblock %}
 {% block canonical %}{{ site.site_url }}{{ post.url }}{% endblock %}
 
-{% block og_image %}
-    {% if post.thumbnail %}
+{% block og_image %}{% if post.thumbnail %}
     <meta property="og:image" content="{{ site.site_url }}{{ post.thumbnail }}">
-    {% endif %}
-{% endblock %}
+{% endif %}{% endblock %}
 
 {% block extra_head %}
 <script type="application/ld+json">

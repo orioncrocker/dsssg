@@ -2,13 +2,7 @@
 
 {% block title %}{{ tag.display_name }} - {{ site.site_title }}{% endblock %}
 
-{% block description %}
-    {% if tag.description %}
-        {{ tag.description|truncate(160)|trim }}
-    {% else %}
-        Browse {{ posts|length }} posts tagged with {{ tag.display_name }} on {{ site.site_title }}.
-    {% endif %}
-{% endblock %}
+{% block description %}{% if tag.description %}{{ tag.description|truncate(160)|trim }}{% else %}Browse {{ posts|length }} posts tagged with {{ tag.display_name }} on {{ site.site_title }}.{% endif %}{% endblock %}
 
 {% block og_title %}{{ tag.display_name }} - {{ site.site_title }}{% endblock %}
 {% block og_description %}

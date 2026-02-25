@@ -59,12 +59,14 @@ site_description: "A website about things."
 site_url: "https://example.com"
 author: "Your Name"
 
-content_dir: "posts"
-nav_dir: "nav"
+content_dir: "content/posts"
+nav_dir: "content/nav"
+root_dir: "content/root"
 template_dir: "dssg/templates"
 static_dir: "static"
 output_dir: "site"
 tags_file: "tags.yaml"
+images_dir: "static/images"
 ```
 
 Copy the Makefile from dsssg to the site root:
@@ -77,15 +79,18 @@ Then add your content:
 
 ```
 mysite/
-├── dssg/           # dsssg submodule
+├── dssg/               # dsssg submodule
 ├── config.yaml
 ├── Makefile
 ├── tags.yaml
-├── posts/          # Blog posts
-├── nav/            # Navbar pages (about, contact, etc.)
-├── root/           # Root-level pages excluded from navbar (e.g. 404)
-├── static/         # Site-specific static assets (overrides dssg/static/)
-└── images/         # Images copied to site/images/
+├── content/
+│   ├── posts/          # Blog posts
+│   ├── nav/            # Navbar pages (about, contact, etc.)
+│   └── root/           # Root-level pages excluded from navbar (e.g. 404)
+└── static/
+    ├── css/            # Site-specific styles
+    ├── fonts/          # Self-hosted web fonts
+    └── images/         # Images served at /static/images/
 ```
 
 Changes to the generator itself (templates, build.py, CSS) should be committed inside the `dssg/` submodule separately.
@@ -109,8 +114,8 @@ All configuration lives in `config.yaml` (read from the current working director
 | `static_dir` | `"static"` | Static assets copied to `site/static/` |
 | `output_dir` | `"site"` | Build output directory |
 | `tags_file` | `"tags.yaml"` | Tag metadata definitions |
-| `images_dir` | `"images"` | *(optional)* Images directory, copied to `site/images/` |
-| `root_dir` | `"root"` | *(optional)* Pages built with site template, output to site root, excluded from navbar |
+| `images_dir` | `"static/images"` | *(optional)* Images directory, copied to `site/{images_dir}/` |
+| `root_dir` | `"content/root"` | *(optional)* Pages built with site template, output to site root, excluded from navbar |
 | `footer_text` | `null` | *(optional)* First footer line (site-specific text) |
 | `footer_credit` | `null` | *(optional)* Second footer line (e.g. attribution) |
 
@@ -236,14 +241,18 @@ body {
 site/
 ├── index.html
 ├── tags.html
-├── 404.html           # from root_dir
-├── about.html         # from nav_dir
+├── sitemap.xml
+├── robots.txt
+├── feed.xml
+├── 404.html           # from content/root/
+├── about.html         # from content/nav/
 ├── posts/
 │   └── my-post.html
 ├── tags/
 │   └── my-tag.html
-├── static/
-│   └── css/
-│       └── style.css
-└── images/
+└── static/
+    ├── css/
+    │   └── style.css
+    ├── fonts/
+    └── images/
 ```

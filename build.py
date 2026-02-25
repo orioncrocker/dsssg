@@ -528,7 +528,7 @@ def build_site():
     images_optimized = 0
     images_dir = CONFIG['images_dir']
     if os.path.exists(images_dir):
-        output_images_dir = os.path.join(CONFIG['output_dir'], 'images')
+        output_images_dir = os.path.join(CONFIG['output_dir'], images_dir)
         if CONFIG['image_optimize']:
             from PIL import Image
             max_width = CONFIG['image_max_width']

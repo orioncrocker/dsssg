@@ -5,7 +5,7 @@
 
 {% block content %}
 <section class="tag-archive">
-    <header class="tag-header">
+    <div class="tag-header">
         <h3>
             {% if tag.icon %}<span class="icon large-icon" {% if tag.color %}style="color: {{ tag.color }};"{% endif %}>{{ tag.icon }}</span>{% endif %}
             Posts tagged with "{{ tag.display_name }}"
@@ -20,7 +20,7 @@
         <div class="post-count">
             {{ posts|length }} post{% if posts|length != 1 %}s{% endif %}
         </div>
-    </header>
+    </div>
 
     <div class="post-list">
         {% for post in posts %}

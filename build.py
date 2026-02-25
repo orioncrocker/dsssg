@@ -9,14 +9,10 @@
 # ]
 # ///
 """
-Simple Tag System Implementation for dsssg (Dead Simple Static Site Generator)
+dsssg — Dead Simple Static Site Generator
 
-This script enhances dsssg with a flat tag-based system instead of directory-based organization.
-Features:
-- Uses YAML front matter in markdown files to assign tags
-- Generates tag archive pages
-- Updates URL structure to use tags instead of directories
-- Provides tag-based navigation
+Processes Markdown content with YAML front matter into a static site.
+Supports tags, nav pages, root pages, image optimization, and Jinja2 templates.
 """
 
 import os
@@ -120,10 +116,9 @@ def generate_post_url(slug):
     """Generate URL for a post"""
     return f"/posts/{slug}.html"
 
-def generate_tag_url(tag):
+def generate_tag_url(slug):
     """Generate URL for a tag page"""
-    tag_slug = tag.lower().replace(' ', '-')
-    return f"/tags/{tag_slug}.html"
+    return f"/tags/{slug}.html"
 
 def load_tag_metadata():
     """Load tag metadata from tags.yaml file if it exists"""
@@ -418,6 +413,8 @@ def build_site():
         tag_obj['count'] = len(tags_to_posts[tag_name])
         processed_tags[tag_name] = tag_obj
 
+    all_tags_list = list(processed_tags.values())
+
     # Generate nav pages
     post_template = env.get_template(CONFIG['post_template'])
     for post in nav_pages:
@@ -430,7 +427,7 @@ def build_site():
             post=post,
             site=CONFIG,
             posts=posts,
-            tags=list(processed_tags.values())
+            tags=all_tags_list
         )
 
         # Write to file
@@ -445,7 +442,7 @@ def build_site():
             post=post,
             site=CONFIG,
             posts=posts,
-            tags=list(processed_tags.values())
+            tags=all_tags_list
         )
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
@@ -453,13 +450,7 @@ def build_site():
     # Generate post pages
     for post in posts:
         # Process tags for this post
-        post_tags = []
-        for tag_name in post['tags']:
-            if tag_name in processed_tags:
-                post_tags.append(processed_tags[tag_name])
-
-        # Update post with processed tags
-        post['processed_tags'] = post_tags
+        post['processed_tags'] = [processed_tags[t] for t in post['tags'] if t in processed_tags]
 
         # Generate output path
         output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
@@ -470,7 +461,7 @@ def build_site():
             post=post,
             site=CONFIG,
             posts=posts,
-            tags=list(processed_tags.values())
+            tags=all_tags_list
         )
 
         # Write to file
@@ -480,52 +471,28 @@ def build_site():
     # Generate tag pages
     tag_template = env.get_template(CONFIG['tag_template'])
     for tag_name, tag_posts in tags_to_posts.items():
-        # Sort posts in this tag by date
         tag_posts.sort(key=lambda x: x['date'], reverse=True)
-        
-        # Get processed tag object
         tag = processed_tags[tag_name]
-        
-        # Generate output path
         output_path = os.path.join(CONFIG['output_dir'], f"tags/{tag['slug']}.html")
-        
-        # Render tag template
         html = tag_template.render(
             tag=tag,
             posts=tag_posts,
             site=CONFIG,
-            tags=list(processed_tags.values())
+            tags=all_tags_list
         )
-        
-        # Write to file
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
-    
+
     # Generate index page
     index_template = env.get_template(CONFIG['index_template'])
-    index_html = index_template.render(
-        posts=posts,
-        site=CONFIG,
-        tags=list(processed_tags.values())
-    )
-    
-    # Write index to file
     with open(os.path.join(CONFIG['output_dir'], 'index.html'), 'w', encoding='utf-8') as f:
-        f.write(index_html)
-    
+        f.write(index_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
+
     # Generate tags overview page
     if os.path.exists(os.path.join(CONFIG['template_dir'], CONFIG['tags_template'])):
         tags_template = env.get_template(CONFIG['tags_template'])
-        tags_html = tags_template.render(
-            posts=posts,
-            site=CONFIG,
-            tags=list(processed_tags.values())
-        )
-        
-        # Write tags page to file
         with open(os.path.join(CONFIG['output_dir'], 'tags.html'), 'w', encoding='utf-8') as f:
-            f.write(tags_html)
-        print("Tags overview page generated")
+            f.write(tags_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
     
     # Copy static assets
     static_dir = CONFIG['static_dir']

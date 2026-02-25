@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.8"
+# dependencies = [
+#   "PyYAML",
+#   "Markdown",
+#   "Jinja2",
+# ]
+# ///
 """
 Simple Tag System Implementation for dsssg (Dead Simple Static Site Generator)
 
@@ -12,6 +20,7 @@ Features:
 
 import os
 import re
+import sys
 import yaml
 import shutil
 import markdown
@@ -19,23 +28,35 @@ from collections import defaultdict
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
-# Configuration
-CONFIG = {
-    'content_dir': 'content/posts',# Content files
-    'nav_dir': 'content/nav',    # Nav files
-    'static_dir': 'static',      # Static assets
-    'output_dir': 'site',        # Generated HTML filepath
-    'template_dir': 'templates', # HTML templates
-    'tag_template': 'tag.html',  # Template for tag pages
-    'post_template': 'post.html',# Template for post pages
-    'index_template': 'index.html', # Template for index page
-    'tags_template': 'tags.html',# Template for tags overview page
-    'site_title': 'My Website',  # Title of the website
-    'site_description': 'A tagged website built with dsssg',
-    'site_url': 'https://example.com',
-    'date_format': '%Y-%m-%d',   # Date format
-    'tags_file': 'tags.yaml'     # File containing tag metadata (optional)
-}
+
+def load_config():
+    """Load configuration from config.yaml in cwd, merged over defaults."""
+    defaults = {
+        'content_dir': 'content/posts',
+        'nav_dir': 'content/nav',
+        'static_dir': 'static',
+        'output_dir': 'site',
+        'template_dir': 'templates',
+        'tag_template': 'tag.html',
+        'post_template': 'post.html',
+        'index_template': 'index.html',
+        'tags_template': 'tags.html',
+        'site_title': 'My Website',
+        'site_description': 'A tagged website built with dsssg',
+        'site_url': 'https://example.com',
+        'date_format': '%Y-%m-%d',
+        'tags_file': 'tags.yaml',
+    }
+    config_path = sys.argv[1] if len(sys.argv) > 1 else 'config.yaml'
+    if os.path.exists(config_path):
+        with open(config_path, 'r', encoding='utf-8') as f:
+            user_config = yaml.safe_load(f) or {}
+        defaults.update(user_config)
+        print(f"Loaded config from {config_path}")
+    return defaults
+
+
+CONFIG = load_config()
 
 def extract_front_matter(content):
     """Extract YAML front matter from markdown content"""
@@ -100,7 +121,7 @@ def load_tag_metadata():
     """Load tag metadata from tags.yaml file if it exists"""
     tags_metadata = {}
     
-    tags_file_path = os.path.join(os.path.dirname(__file__), CONFIG['tags_file'])
+    tags_file_path = CONFIG['tags_file']
     if os.path.exists(tags_file_path):
         try:
             with open(tags_file_path, 'r', encoding='utf-8') as f:

@@ -202,6 +202,7 @@ def process_image_captions(html_content):
 
 def build_site():
     """Build the site with tag support"""
+    start_time = datetime.now()
     # Set up Jinja2 template environment
     env = Environment(loader=FileSystemLoader(CONFIG['template_dir']))
 
@@ -640,6 +641,7 @@ def build_site():
             from PIL import Image
             max_width = CONFIG['image_max_width']
             jpeg_quality = CONFIG['image_quality']
+            images_optimized = 0
             for root, _, files in os.walk(images_dir):
                 for file in files:
                     src_path = os.path.join(root, file)
@@ -658,12 +660,16 @@ def build_site():
                                 img.save(dst_path, 'PNG', optimize=True)
                             else:
                                 img.save(dst_path)
+                            images_optimized += 1
                     except Exception:
                         shutil.copy2(src_path, dst_path)
         else:
             shutil.copytree(images_dir, output_images_dir, dirs_exist_ok=True)
-    
-    print(f"Site built successfully with {len(posts)} posts and {len(processed_tags)} tags")
+            images_optimized = 0
+
+    elapsed = (datetime.now() - start_time).total_seconds()
+    images_str = f", and optimized {images_optimized} images" if images_optimized else ""
+    print(f"{CONFIG['site_title']} built successfully! Made {len(posts)} posts, {len(processed_tags)} tags{images_str} in {elapsed:.2f}s")
 
 if __name__ == "__main__":
     build_site()

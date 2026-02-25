@@ -447,6 +447,7 @@ def build_site():
                     # Create post object
                     post = {
                         'title': title,
+                        'hide_title': front_matter.get('hide_title', False),
                         'date': date,
                         'tags': tags,
                         'content': html_content,

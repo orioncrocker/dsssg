@@ -13,9 +13,11 @@
         <div class="container">
             <h1><a href="/">{{ site.site_title }}</a></h1>
             <nav>
+                <a href="/">Posts</a>
                 <a href="/tags.html">Tags</a>
-                <a href="/about.html">About</a>
-                <a href="/contact.html">Contact</a>
+                {% for page in nav_pages %}
+                <a href="{{ page.url }}">{{ page.title }}</a>
+                {% endfor %}
             </nav>
         </div>
     </header>

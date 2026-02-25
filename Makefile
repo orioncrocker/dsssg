@@ -13,7 +13,7 @@ deploy:
 	rsync -ahvuz site/* $(USERNAME)@$(REMOTE):$(DESTINATION)
 
 clean:
-	rm -r site/*
+	rm -rf site/*
 
 build:
 	python3 build.py

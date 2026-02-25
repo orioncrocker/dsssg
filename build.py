@@ -470,6 +470,8 @@ def build_site():
     process_markdown('content_dir')
     process_markdown('nav_dir', True)
 
+    env.globals['nav_pages'] = nav_pages
+
     # Sort posts by date (newest first)
     posts.sort(key=lambda x: x['date'], reverse=True)
     

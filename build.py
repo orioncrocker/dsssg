@@ -46,6 +46,7 @@ def load_config():
         'site_url': 'https://example.com',
         'date_format': '%Y-%m-%d',
         'tags_file': 'tags.yaml',
+        'images_dir': 'images',
     }
     config_path = sys.argv[1] if len(sys.argv) > 1 else 'config.yaml'
     if os.path.exists(config_path):
@@ -572,12 +573,21 @@ def build_site():
             f.write(tags_html)
         print("Tags overview page generated")
     
-    # Copy static assets (CSS, JS, images, etc.)
-    static_dir = os.path.join(CONFIG['static_dir'])
+    # Copy static assets (CSS, JS, etc.)
+    static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):
         shutil.copytree(
-            static_dir, 
+            static_dir,
             os.path.join(CONFIG['output_dir'], 'static'),
+            dirs_exist_ok=True
+        )
+
+    # Copy site images
+    images_dir = CONFIG['images_dir']
+    if os.path.exists(images_dir):
+        shutil.copytree(
+            images_dir,
+            os.path.join(CONFIG['output_dir'], 'images'),
             dirs_exist_ok=True
         )
     

@@ -23,7 +23,7 @@
                 <img src="{{ post.thumbnail }}" alt="{{ post.title }}">
                 {% endif %}
                 <div class="post-excerpt">
-                    {{ post.content|striptags|safe_truncate()|safe }}
+                    {{ post.content|striptags_excerpt|safe_truncate()|safe }}
                 </div>
                 <a href="{{ post.url }}" class="read-more">Read more</a>
             </article>

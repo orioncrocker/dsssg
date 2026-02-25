@@ -225,12 +225,35 @@ def build_site():
         if value is None:
             return ''
         return re.sub(pattern, replacement, value)
+
+    def striptags_excerpt(value):
+        """Strip all HTML tags except <pre> blocks and hyperlinks"""
+        if value is None:
+            return ''
+        pre_blocks = []
+        def save_pre(match):
+            pre_blocks.append(match.group(0))
+            return f'\x00PRE{len(pre_blocks) - 1}\x00'
+        result = re.sub(r'<pre>.*?</pre>', save_pre, value, flags=re.DOTALL)
+        # Strip all tags except <a ...> and </a>
+        result = re.sub(r'<(?!/?a[\s>])[^>]+>', '', result)
+        for i, block in enumerate(pre_blocks):
+            result = result.replace(f'\x00PRE{i}\x00', block)
+        return result
     
     def safe_html_truncate(html_content, length=700):
         """
         Safely truncate HTML content to approximately 'length' characters
-        while preserving valid HTML structure and code blocks
+        while preserving valid HTML structure. Pre/code blocks are always
+        included whole and count as 50 chars toward the budget.
         """
+        # Extract <pre> blocks before parsing so they are never split
+        pre_blocks = []
+        def save_pre(match):
+            pre_blocks.append(match.group(0))
+            return f'\x00PRE{len(pre_blocks) - 1}\x00'
+        html_without_pre = re.sub(r'<pre>.*?</pre>', save_pre, html_content, flags=re.DOTALL)
+
         class HTMLTruncator(HTMLParser):
             def __init__(self, max_length):
                 super().__init__()
@@ -240,92 +263,61 @@ def build_site():
                 self.output = []
                 self.open_tags = []
                 self.truncated = False
-                self.in_pre = False
-                self.in_code = False
-                
+
             def handle_starttag(self, tag, attrs):
                 if self.truncated:
                     return
-                
-                # Skip certain tags that might cause issues
                 if tag in ('script', 'style', 'iframe'):
                     return
-                
-                # Track if we're in a code or pre element
-                if tag == 'pre':
-                    self.in_pre = True
-                elif tag == 'code':
-                    self.in_code = True
-                
                 self.open_tags.append(tag)
                 attrs_str = " ".join(f'{name}="{value}"' for name, value in attrs)
                 self.output.append(f"<{tag}{' ' + attrs_str if attrs_str else ''}>")
-                
+
             def handle_endtag(self, tag):
                 if self.truncated:
                     return
-                
-                # Skip certain tags
                 if tag in ('script', 'style', 'iframe'):
                     return
-                
-                # Track if we're leaving a code or pre element
-                if tag == 'pre':
-                    self.in_pre = False
-                elif tag == 'code':
-                    self.in_code = False
-                
-                # Remove matching open tag
                 if tag in self.open_tags:
                     self.open_tags.remove(tag)
-                
                 self.output.append(f"</{tag}>")
-                
+
             def handle_data(self, data):
                 if self.truncated:
                     return
-
-                # Count only visible characters
-                data_length = len(data)
-                remaining = self.max_length - self.char_count
-                
-                if remaining <= 0:
-                    self.truncated = True
-                    return
-                    
-                if data_length > remaining:
-                    # If we're in a code block, don't split in the middle
-                    if self.in_pre or self.in_code:
-                        self.truncated = True
-                        return
-                    
-                    # Cut at word boundary if possible
-                    words = data[:remaining + 50].split()
-                    partial_data = ' '.join(words[:-1]) if len(words) > 1 else words[0][:remaining]
-                    
-                    if partial_data:
-                        self.output.append(partial_data + '...')
+                # Split on pre markers — they may be embedded mid-text-node
+                parts = re.split(r'(\x00PRE\d+\x00)', data)
+                for part in parts:
+                    if self.truncated:
+                        break
+                    marker_match = re.fullmatch(r'\x00PRE(\d+)\x00', part)
+                    if marker_match:
+                        self.output.append(pre_blocks[int(marker_match.group(1))])
+                        self.char_count += 50
+                        if self.char_count >= self.max_length:
+                            self.truncated = True
                     else:
-                        self.output.append(data[:remaining] + '...')
-                    
-                    self.char_count += len(partial_data)
-                    self.truncated = True
-                else:
-                    self.output.append(data)
-                    self.char_count += data_length
-            
+                        part_length = len(part)
+                        remaining = self.max_length - self.char_count
+                        if remaining <= 0:
+                            self.truncated = True
+                        elif part_length > remaining:
+                            words = part[:remaining + 50].split()
+                            partial = ' '.join(words[:-1]) if len(words) > 1 else part[:remaining]
+                            self.output.append((partial or part[:remaining]) + '...')
+                            self.char_count += remaining
+                            self.truncated = True
+                        else:
+                            self.output.append(part)
+                            self.char_count += part_length
+
             def get_truncated_html(self):
                 output_str = ''.join(self.output)
-                
-                # Close any remaining open tags
                 for tag in reversed(self.open_tags):
                     output_str += f'</{tag}>'
-                    
                 return output_str
-        
-        # Remove problematic elements before parsing
-        cleaned_html = re.sub(r'<(script|style|iframe).*?</\1>|<head>.*?</head>', '', html_content, flags=re.DOTALL)
 
+        cleaned_html = re.sub(r'<(script|style|iframe).*?</\1>|<head>.*?</head>', '', html_without_pre, flags=re.DOTALL)
         truncator = HTMLTruncator(length)
         truncator.feed(cleaned_html)
         return truncator.get_truncated_html()
@@ -389,6 +381,7 @@ def build_site():
     env.filters['safe_truncate'] = safe_html_truncate
     env.filters['regex_search'] = regex_search
     env.filters['regex_replace'] = regex_replace
+    env.filters['striptags_excerpt'] = striptags_excerpt
 
     # Add current date to templates
     env.globals['now'] = datetime.now()

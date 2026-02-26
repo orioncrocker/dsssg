@@ -87,7 +87,7 @@ def read_markdown_file(file_path):
     # Convert markdown to HTML
     html_content = markdown.markdown(
         content_without_front_matter,
-        extensions=['fenced_code', 'tables', 'nl2br']
+        extensions=['fenced_code', 'tables']
     )
     
     # Process image captions

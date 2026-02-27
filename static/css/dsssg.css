@@ -1,0 +1,53 @@
+/* dsssg component styles — default values, override in your site's stylesheet */
+
+:root {
+    --tag-font-size: 0.75rem;
+    --tag-padding: 0.2rem 0.5rem;
+}
+
+/* Tags page */
+.tags-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    margin-bottom: 0.5rem;
+}
+
+.sort-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.sort-btn {
+    background: none;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: var(--tag-padding);
+    font-family: inherit;
+    font-size: var(--tag-font-size);
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.sort-btn.active {
+    background-color: var(--primary);
+    color: var(--code-bg);
+}
+
+.tags-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tag-description {
+    margin-left: 0.5rem;
+    margin-top: 0.25rem;
+}

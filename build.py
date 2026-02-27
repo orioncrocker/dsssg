@@ -534,7 +534,12 @@ def build_site():
     rss_lines += ['  </channel>', '</rss>']
     write_page('feed.xml', '\n'.join(rss_lines))
 
-    # Copy static assets
+    # Copy dsssg bundled static assets first (parent site can override)
+    dsssg_static = os.path.join(os.path.dirname(__file__), 'static')
+    if os.path.exists(dsssg_static):
+        shutil.copytree(dsssg_static, os.path.join(CONFIG['output_dir'], 'static'), dirs_exist_ok=True)
+
+    # Copy site static assets (overrides dsssg defaults)
     static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):
         shutil.copytree(

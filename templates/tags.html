@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}Tags - {{ site.site_title }}{% endblock %}
-{% block description %}Browse all tags on {{ site.site_title }}{% endblock %}
+
+{% block og_title %}Tags - {{ site.site_title }}{% endblock %}
+{% block og_description %}Browse all {{ tags|length }} topics on {{ site.site_title }}.{% endblock %}
+{% block og_url %}{{ site.site_url }}/tags.html{% endblock %}
+{% block canonical %}{{ site.site_url }}/tags.html{% endblock %}
 
 {% block content %}
 <section class="tags-page">
-    <header class="page-header">
+    <div class="page-header">
         <h1>Tags</h1>
         <p>Browse content by topic</p>
-    </header>
+    </div>
 
     <!-- Tags sorted by popularity (post count) -->
     <section class="tags-list">

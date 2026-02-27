@@ -1,0 +1,20 @@
+site_title: "My Website"
+site_description: "A tagged website built with dsssg"
+site_url: "https://example.com"
+
+content_dir: "content/posts"
+nav_dir: "content/nav"
+template_dir: "templates"
+static_dir: "static"
+output_dir: "site"
+tags_file: "tags.yaml"
+
+# images_dir: "images"       # Directory of images copied to site/images/
+# image_optimize: false      # Optimize images during build (requires Pillow)
+# image_max_width: 1200      # Maximum image width in pixels (only applied when optimizing)
+# image_quality: 85          # JPEG compression quality 1-95 (only applied when optimizing)
+# root_dir: "root"           # Pages built with site template but excluded from navbar (e.g. 404)
+author: ""                  # Site author name used in footer and post metadata
+# date_format: "%B %d, %Y"  # strftime format for displayed dates
+# footer_text: ""            # First footer line (site-specific text)
+footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"  # Second footer line

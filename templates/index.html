@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}{{ site.site_title }} - Home{% endblock %}
+{% block title %}{{ site.site_title }} - {{ site.site_tagline|default('Home') }}{% endblock %}
+
+{% block description %}{{ site.site_description }}{% endblock %}
+
+{% block og_title %}{{ site.site_title }}{% endblock %}
+{% block og_description %}{{ site.site_description }}{% endblock %}
+{% block og_url %}{{ site.site_url }}/{% endblock %}
+{% block canonical %}{{ site.site_url }}/{% endblock %}
 
 {% block content %}
 <div class="content-wrapper">
     <section class="posts">
+        <h1>Recent Posts</h1>
         <div class="post-list">
             {% for post in posts %}
-            <article class="post-summary">
-                <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-                {% include "post-meta.html" %}
-                <div class="post-excerpt">
-                    {{ post.content|striptags|safe_truncate()|safe }}
-                </div>
-                <a href="{{ post.url }}" class="read-more">Read more</a>
-            </article>
+            {% include "post-summary.html" %}
             {% endfor %}
         </div>
     </section>

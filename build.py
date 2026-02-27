@@ -1,41 +1,67 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.8"
+# dependencies = [
+#   "PyYAML",
+#   "Markdown",
+#   "Jinja2",
+#   "Pillow",
+# ]
+# ///
 """
-Simple Tag System Implementation for dsssg (Dead Simple Static Site Generator)
+dsssg — Dead Simple Static Site Generator
 
-This script enhances dsssg with a flat tag-based system instead of directory-based organization.
-Features:
-- Uses YAML front matter in markdown files to assign tags
-- Generates tag archive pages
-- Updates URL structure to use tags instead of directories
-- Provides tag-based navigation
+Processes Markdown content with YAML front matter into a static site.
+Supports tags, nav pages, root pages, image optimization, and Jinja2 templates.
 """
 
 import os
 import re
+import sys
 import yaml
 import shutil
 import markdown
 from collections import defaultdict
 from datetime import datetime
+from html.parser import HTMLParser
 from jinja2 import Environment, FileSystemLoader
 
-# Configuration
-CONFIG = {
-    'content_dir': 'content/posts',# Content files
-    'nav_dir': 'content/nav',    # Nav files
-    'static_dir': 'static',      # Static assets
-    'output_dir': 'site',        # Generated HTML filepath
-    'template_dir': 'templates', # HTML templates
-    'tag_template': 'tag.html',  # Template for tag pages
-    'post_template': 'post.html',# Template for post pages
-    'index_template': 'index.html', # Template for index page
-    'tags_template': 'tags.html',# Template for tags overview page
-    'site_title': 'My Website',  # Title of the website
-    'site_description': 'A tagged website built with dsssg',
-    'site_url': 'https://example.com',
-    'date_format': '%Y-%m-%d',   # Date format
-    'tags_file': 'tags.yaml'     # File containing tag metadata (optional)
-}
+
+def load_config():
+    """Load configuration from config.yaml in cwd, merged over defaults."""
+    defaults = {
+        'content_dir': 'content/posts',
+        'nav_dir': 'content/nav',
+        'static_dir': 'static',
+        'output_dir': 'site',
+        'template_dir': 'templates',
+        'tag_template': 'tag.html',
+        'post_template': 'post.html',
+        'index_template': 'index.html',
+        'tags_template': 'tags.html',
+        'site_title': 'My Website',
+        'site_description': 'A tagged website built with dsssg',
+        'site_url': 'https://example.com',
+        'author': None,
+        'date_format': '%Y-%m-%d',
+        'tags_file': 'tags.yaml',
+        'images_dir': 'images',
+        'root_dir': 'root',
+        'footer_text': None,
+        'footer_credit': None,
+        'image_optimize': False,
+        'image_max_width': 1200,
+        'image_quality': 85,
+    }
+    config_path = sys.argv[1] if len(sys.argv) > 1 else 'config.yaml'
+    if os.path.exists(config_path):
+        with open(config_path, 'r', encoding='utf-8') as f:
+            user_config = yaml.safe_load(f) or {}
+        defaults.update(user_config)
+    return defaults
+
+
+CONFIG = load_config()
 
 def extract_front_matter(content):
     """Extract YAML front matter from markdown content"""
@@ -61,7 +87,7 @@ def read_markdown_file(file_path):
     # Convert markdown to HTML
     html_content = markdown.markdown(
         content_without_front_matter,
-        extensions=['fenced_code', 'tables', 'nl2br']
+        extensions=['fenced_code', 'tables']
     )
     
     # Process image captions
@@ -69,11 +95,9 @@ def read_markdown_file(file_path):
     
     return front_matter, html_content
 
-def get_post_date(front_matter, file_path):
-    """Get post date from front matter or file modification time"""
-    if 'date' in front_matter:
-        return front_matter['date']
-    return ""
+def get_post_date(front_matter):
+    """Get post date from front matter, or empty string if not set"""
+    return front_matter.get('date', "")
 
 def clean_output_directory():
     """Clean output directory"""
@@ -84,32 +108,28 @@ def clean_output_directory():
     os.makedirs(os.path.join(CONFIG['output_dir'], 'posts'), exist_ok=True)
 
 def generate_nav_url(slug):
-    """Generate URL for a post - now independent of tags"""
+    """Generate URL for a nav or root page"""
     return f"/{slug}.html"
 
 def generate_post_url(slug):
-    """Generate URL for a post - now independent of tags"""
+    """Generate URL for a post"""
     return f"/posts/{slug}.html"
 
-def generate_tag_url(tag):
+def generate_tag_url(slug):
     """Generate URL for a tag page"""
-    tag_slug = tag.lower().replace(' ', '-')
-    return f"/tags/{tag_slug}.html"
+    return f"/tags/{slug}.html"
 
 def load_tag_metadata():
     """Load tag metadata from tags.yaml file if it exists"""
     tags_metadata = {}
     
-    tags_file_path = os.path.join(os.path.dirname(__file__), CONFIG['tags_file'])
+    tags_file_path = CONFIG['tags_file']
     if os.path.exists(tags_file_path):
         try:
             with open(tags_file_path, 'r', encoding='utf-8') as f:
                 tags_metadata = yaml.safe_load(f) or {}
-            print(f"Loaded metadata for {len(tags_metadata)} tags from {CONFIG['tags_file']}")
         except Exception as e:
             print(f"Error loading tags metadata: {e}")
-    else:
-        print(f"Tags file {CONFIG['tags_file']} not found, proceeding without tag metadata")
     
     return tags_metadata
 
@@ -129,27 +149,22 @@ def process_tag(tag_name, tags_metadata):
         'description': metadata.get('description', ''),
         'color': metadata.get('color', None),
         'icon': metadata.get('icon', None),
-        'featured': metadata.get('featured', False),
-        'order': metadata.get('order', 999),
         'url': generate_tag_url(slug)
     }
     
     return tag
 
-
 def process_image_captions(html_content):
     """
     Process HTML content to add captions to images based on their alt text.
     Converts:
-    <img src="path/to/image" alt="This is a caption"> 
+    <img src="path/to/image" alt="This is a caption">
     To:
     <figure>
         <img src="path/to/image" alt="This is a caption">
         <figcaption>This is a caption</figcaption>
     </figure>
     """
-    import re
-    
     # Pattern to match img tags with alt attributes
     img_pattern = r'<img([^>]*?)alt="([^"]*)"([^>]*?)>'
     
@@ -173,6 +188,7 @@ def process_image_captions(html_content):
 
 def build_site():
     """Build the site with tag support"""
+    start_time = datetime.now()
     # Set up Jinja2 template environment
     env = Environment(loader=FileSystemLoader(CONFIG['template_dir']))
 
@@ -184,42 +200,52 @@ def build_site():
                 date_value = datetime.strptime(date_value, "%Y-%m-%d")
             except ValueError:
                 return date_value
-        if isinstance(date_value, datetime):
+        if hasattr(date_value, 'strftime'):
             return date_value.strftime(format_string)
         return date_value
+
+    def regex_search(value, pattern):
+        """Search for a pattern in a string"""
+        if value is None:
+            return ''
+        match = re.search(pattern, value)
+        return match.group(0) if match else ''
+
+    def regex_replace(value, pattern, replacement):
+        """Replace a pattern in a string"""
+        if value is None:
+            return ''
+        return re.sub(pattern, replacement, value)
+
+    def striptags_excerpt(value):
+        """Strip all HTML tags except <pre> blocks and hyperlinks. Removes figures entirely."""
+        if value is None:
+            return ''
+        pre_blocks = []
+        def save_pre(match):
+            pre_blocks.append(match.group(0))
+            return f'\x00PRE{len(pre_blocks) - 1}\x00'
+        result = re.sub(r'<pre>.*?</pre>', save_pre, value, flags=re.DOTALL)
+        result = re.sub(r'<figure>.*?</figure>', '', result, flags=re.DOTALL)
+        # Strip all tags except <a ...> and </a>
+        result = re.sub(r'<(?!/?a[\s>])[^>]+>', '', result)
+        for i, block in enumerate(pre_blocks):
+            result = result.replace(f'\x00PRE{i}\x00', block)
+        return result
     
     def safe_html_truncate(html_content, length=700):
         """
         Safely truncate HTML content to approximately 'length' characters
-        while preserving valid HTML structure and code blocks
+        while preserving valid HTML structure. Pre/code blocks are always
+        included whole and count as 50 chars toward the budget.
         """
-        from html.parser import HTMLParser
-        import re
-        
-        # Pre-process to handle markdown code blocks that might not be in HTML yet
-        # Protect code blocks with special markers
-        protected_content = html_content
-        
-        # First, handle fenced code blocks ```code``` and preserve them
-        code_block_pattern = r'```(?:[a-zA-Z0-9]+)?\n(.*?)\n```'
-        code_blocks = []
-        
-        def save_code_block(match):
-            code_blocks.append(match.group(0))
-            return f"CODE_BLOCK_PLACEHOLDER_{len(code_blocks) - 1}"
-        
-        protected_content = re.sub(code_block_pattern, save_code_block, protected_content, flags=re.DOTALL)
-        
-        # Then, handle inline code `code` and preserve them
-        inline_code_pattern = r'`([^`]+)`'
-        inline_codes = []
-        
-        def save_inline_code(match):
-            inline_codes.append(match.group(0))
-            return f"INLINE_CODE_PLACEHOLDER_{len(inline_codes) - 1}"
-        
-        protected_content = re.sub(inline_code_pattern, save_inline_code, protected_content)
-        
+        # Extract <pre> blocks before parsing so they are never split
+        pre_blocks = []
+        def save_pre(match):
+            pre_blocks.append(match.group(0))
+            return f'\x00PRE{len(pre_blocks) - 1}\x00'
+        html_without_pre = re.sub(r'<pre>.*?</pre>', save_pre, html_content, flags=re.DOTALL)
+
         class HTMLTruncator(HTMLParser):
             def __init__(self, max_length):
                 super().__init__()
@@ -229,151 +255,66 @@ def build_site():
                 self.output = []
                 self.open_tags = []
                 self.truncated = False
-                self.in_pre = False
-                self.in_code = False
-                
+
             def handle_starttag(self, tag, attrs):
                 if self.truncated:
                     return
-                
-                # Skip certain tags that might cause issues
                 if tag in ('script', 'style', 'iframe'):
                     return
-                
-                # Track if we're in a code or pre element
-                if tag == 'pre':
-                    self.in_pre = True
-                elif tag == 'code':
-                    self.in_code = True
-                
                 self.open_tags.append(tag)
                 attrs_str = " ".join(f'{name}="{value}"' for name, value in attrs)
                 self.output.append(f"<{tag}{' ' + attrs_str if attrs_str else ''}>")
-                
+
             def handle_endtag(self, tag):
                 if self.truncated:
                     return
-                
-                # Skip certain tags
                 if tag in ('script', 'style', 'iframe'):
                     return
-                
-                # Track if we're leaving a code or pre element
-                if tag == 'pre':
-                    self.in_pre = False
-                elif tag == 'code':
-                    self.in_code = False
-                
-                # Remove matching open tag
                 if tag in self.open_tags:
                     self.open_tags.remove(tag)
-                
                 self.output.append(f"</{tag}>")
-                
+
             def handle_data(self, data):
                 if self.truncated:
                     return
-                
-                # Check if this is a code block placeholder
-                code_block_match = re.match(r'CODE_BLOCK_PLACEHOLDER_(\d+)', data)
-                if code_block_match:
-                    # This is a code block placeholder, replace it with the actual code
-                    index = int(code_block_match.group(1))
-                    if index < len(code_blocks):
-                        # For code blocks, we count them as a fixed number of characters
-                        # to avoid them taking up the entire excerpt
-                        code_chars = 50  # Count code blocks as 50 chars regardless of actual length
-                        
-                        if self.char_count + code_chars <= self.max_length:
-                            # We can include a shortened version of this code block
-                            code_preview = code_blocks[index]
-                            # Limit the code block to a reasonable preview
-                            if len(code_preview) > 100:
-                                code_lines = code_preview.split('\n')
-                                if len(code_lines) > 3:
-                                    code_preview = '\n'.join(code_lines[:3]) + '\n...'
-                            
-                            self.output.append(code_preview)
-                            self.char_count += code_chars
-                        else:
-                            # Not enough space for the code block
+                # Split on pre markers — they may be embedded mid-text-node
+                parts = re.split(r'(\x00PRE\d+\x00)', data)
+                for part in parts:
+                    if self.truncated:
+                        break
+                    marker_match = re.fullmatch(r'\x00PRE(\d+)\x00', part)
+                    if marker_match:
+                        self.output.append(pre_blocks[int(marker_match.group(1))])
+                        self.char_count += 50
+                        if self.char_count >= self.max_length:
                             self.truncated = True
-                    return
-                
-                # Check if this is an inline code placeholder
-                inline_code_match = re.match(r'INLINE_CODE_PLACEHOLDER_(\d+)', data)
-                if inline_code_match:
-                    index = int(inline_code_match.group(1))
-                    if index < len(inline_codes):
-                        code = inline_codes[index]
-                        # For inline code, count the actual length
-                        if self.char_count + len(code) <= self.max_length:
-                            self.output.append(code)
-                            self.char_count += len(code)
-                        else:
-                            # Not enough space for the inline code
-                            self.truncated = True
-                    return
-                
-                # Count only visible characters
-                data_length = len(data)
-                remaining = self.max_length - self.char_count
-                
-                if remaining <= 0:
-                    self.truncated = True
-                    return
-                    
-                if data_length > remaining:
-                    # If we're in a code block, don't split in the middle
-                    if self.in_pre or self.in_code:
-                        self.truncated = True
-                        return
-                    
-                    # Cut at word boundary if possible
-                    words = data[:remaining + 50].split()
-                    partial_data = ' '.join(words[:-1]) if len(words) > 1 else words[0][:remaining]
-                    
-                    if partial_data:
-                        self.output.append(partial_data + '...')
                     else:
-                        self.output.append(data[:remaining] + '...')
-                    
-                    self.char_count += len(partial_data)
-                    self.truncated = True
-                else:
-                    self.output.append(data)
-                    self.char_count += data_length
-            
+                        part_length = len(part)
+                        remaining = self.max_length - self.char_count
+                        if remaining <= 0:
+                            self.truncated = True
+                        elif part_length > remaining:
+                            words = part[:remaining + 50].split()
+                            partial = ' '.join(words[:-1]) if len(words) > 1 else part[:remaining]
+                            self.output.append((partial or part[:remaining]) + '...')
+                            self.char_count += remaining
+                            self.truncated = True
+                        else:
+                            self.output.append(part)
+                            self.char_count += part_length
+
             def get_truncated_html(self):
                 output_str = ''.join(self.output)
-                
-                # Close any remaining open tags
                 for tag in reversed(self.open_tags):
                     output_str += f'</{tag}>'
-                    
                 return output_str
-        
-        # Remove problematic elements before parsing
-        cleaned_html = re.sub(r'<(script|style|iframe).*?</\1>|<head>.*?</head>', '', protected_content, flags=re.DOTALL)
-        
+
+        cleaned_html = re.sub(r'<(script|style|iframe).*?</\1>|<head>.*?</head>', '', html_without_pre, flags=re.DOTALL)
         truncator = HTMLTruncator(length)
         truncator.feed(cleaned_html)
-        truncated_html = truncator.get_truncated_html()
-        
-        # Post-process to restore any code placeholders that might still be in the truncated text
-        for i, code in enumerate(code_blocks):
-            placeholder = f"CODE_BLOCK_PLACEHOLDER_{i}"
-            if placeholder in truncated_html:
-                truncated_html = truncated_html.replace(placeholder, code)
-        
-        for i, code in enumerate(inline_codes):
-            placeholder = f"INLINE_CODE_PLACEHOLDER_{i}"
-            if placeholder in truncated_html:
-                truncated_html = truncated_html.replace(placeholder, code)
-        
-        return truncated_html
+        return truncator.get_truncated_html()
 
-    def process_markdown(directory, is_nav=False):
+    def process_markdown(directory, is_nav=False, target=None):
         # Process all markdown files in content directory
         for root, _, files in os.walk(CONFIG[directory]):
             for file in files:
@@ -390,7 +331,7 @@ def build_site():
                     title = front_matter.get('title', slug)
 
                     # Get post date
-                    date = get_post_date(front_matter, file_path)
+                    date = get_post_date(front_matter)
 
                     # Get tags (defaulting to empty list)
                     tags = front_matter.get('tags', [])
@@ -402,14 +343,21 @@ def build_site():
                     # Track all tags used
                     all_tags.update(tags)
 
+                    # Extract first image from content for use as thumbnail
+                    thumbnail_match = re.search(r'<img[^>]+src="([^"]+)"', html_content)
+                    thumbnail = thumbnail_match.group(1) if thumbnail_match else None
+
                     # Create post object
                     post = {
                         'title': title,
+                        'hide_title': front_matter.get('hide_title', False),
+                        'nav_order': front_matter.get('nav_order', None),
                         'date': date,
                         'tags': tags,
                         'content': html_content,
                         'slug': slug,
-                        'url': generate_nav_url(slug) if is_nav else generate_post_url(slug)
+                        'url': generate_nav_url(slug) if is_nav else generate_post_url(slug),
+                        'thumbnail': thumbnail,
                     }
 
                     if is_nav is False:
@@ -419,10 +367,13 @@ def build_site():
                         for tag in tags:
                             tags_to_posts[tag].append(post)
                     else:
-                        nav_pages.append(post)
+                        (target if target is not None else nav_pages).append(post)
 
     env.filters['date'] = date_filter
     env.filters['safe_truncate'] = safe_html_truncate
+    env.filters['regex_search'] = regex_search
+    env.filters['regex_replace'] = regex_replace
+    env.filters['striptags_excerpt'] = striptags_excerpt
 
     # Add current date to templates
     env.globals['now'] = datetime.now()
@@ -436,14 +387,20 @@ def build_site():
     # Collect all posts and organize by tags
     posts = []
     nav_pages = []
+    root_pages = []
     tags_to_posts = defaultdict(list)
     all_tags = set()
 
     process_markdown('content_dir')
     process_markdown('nav_dir', True)
+    if os.path.exists(CONFIG['root_dir']):
+        process_markdown('root_dir', is_nav=True, target=root_pages)
+
+    env.globals['nav_pages'] = nav_pages
 
     # Sort posts by date (newest first)
-    posts.sort(key=lambda x: x['date'], reverse=True)
+    posts.sort(key=lambda x: date_filter(x['date']), reverse=True)
+    nav_pages.sort(key=lambda x: (x['nav_order'] is None, x['nav_order']))
     
     # Process tag objects for templates
     processed_tags = {}
@@ -453,114 +410,157 @@ def build_site():
         tag_obj['count'] = len(tags_to_posts[tag_name])
         processed_tags[tag_name] = tag_obj
 
-    # Generate nav pages
-    post_template = env.get_template(CONFIG['post_template'])
-    for post in nav_pages:
-        # Generate output path
-        output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
+    all_tags_list = list(processed_tags.values())
+
+    def write_page(url, html):
+        output_path = os.path.join(CONFIG['output_dir'], url.lstrip('/'))
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-        # Render post template
-        html = post_template.render(
-            post=post,
-            site=CONFIG,
-            posts=posts,
-            tags=list(processed_tags.values())
-        )
-
-        # Write to file
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
+
+    post_template = env.get_template(CONFIG['post_template'])
+
+    # Generate nav and root pages
+    for post in nav_pages + root_pages:
+        write_page(post['url'], post_template.render(post=post, site=CONFIG, tags=all_tags_list))
 
     # Generate post pages
-    post_template = env.get_template(CONFIG['post_template'])
     for post in posts:
-        # Process tags for this post
-        post_tags = []
-        for tag_name in post['tags']:
-            if tag_name in processed_tags:
-                post_tags.append(processed_tags[tag_name])
-
-        # Update post with processed tags
-        post['processed_tags'] = post_tags
-
-        # Generate output path
-        output_path = os.path.join(CONFIG['output_dir'], post['url'].lstrip('/'))
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-        # Render post template
-        html = post_template.render(
-            post=post,
-            site=CONFIG,
-            posts=posts,
-            tags=list(processed_tags.values())
-        )
-
-        # Write to file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
+        post['processed_tags'] = [processed_tags[t] for t in post['tags'] if t in processed_tags]
+        write_page(post['url'], post_template.render(post=post, site=CONFIG, posts=posts, tags=all_tags_list))
 
     # Generate tag pages
     tag_template = env.get_template(CONFIG['tag_template'])
     for tag_name, tag_posts in tags_to_posts.items():
-        # Sort posts in this tag by date
-        tag_posts.sort(key=lambda x: x['date'], reverse=True)
-        
-        # Get processed tag object
+        tag_posts.sort(key=lambda x: date_filter(x['date']), reverse=True)
         tag = processed_tags[tag_name]
-        
-        # Generate output path
-        tag_slug = tag_name.lower().replace(' ', '-')
-        output_path = os.path.join(CONFIG['output_dir'], f"tags/{tag_slug}.html")
-        
-        # Render tag template
-        html = tag_template.render(
-            tag=tag,
-            posts=tag_posts,
-            site=CONFIG,
-            tags=list(processed_tags.values())
-        )
-        
-        # Write to file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
-    
-    # Generate index page
+        write_page(tag['url'], tag_template.render(tag=tag, posts=tag_posts, site=CONFIG, tags=all_tags_list))
+
+    # Generate index and tags overview pages
     index_template = env.get_template(CONFIG['index_template'])
-    index_html = index_template.render(
-        posts=posts,
-        site=CONFIG,
-        tags=list(processed_tags.values())
-    )
-    
-    # Write index to file
-    with open(os.path.join(CONFIG['output_dir'], 'index.html'), 'w', encoding='utf-8') as f:
-        f.write(index_html)
-    
-    # Generate tags overview page
+    write_page('index.html', index_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
+
     if os.path.exists(os.path.join(CONFIG['template_dir'], CONFIG['tags_template'])):
         tags_template = env.get_template(CONFIG['tags_template'])
-        tags_html = tags_template.render(
-            posts=posts,
-            site=CONFIG,
-            tags=list(processed_tags.values())
-        )
-        
-        # Write tags page to file
-        with open(os.path.join(CONFIG['output_dir'], 'tags.html'), 'w', encoding='utf-8') as f:
-            f.write(tags_html)
-        print("Tags overview page generated")
-    
-    # Copy static assets (CSS, JS, images, etc.)
-    static_dir = os.path.join(CONFIG['static_dir'])
+        write_page('tags.html', tags_template.render(posts=posts, site=CONFIG, tags=all_tags_list))
+
+    # Generate sitemap.xml
+    site_url = CONFIG['site_url'].rstrip('/')
+    sitemap_entries = [
+        {'loc': f"{site_url}/", 'priority': '1.0'},
+        {'loc': f"{site_url}/tags.html", 'priority': '0.5'},
+    ]
+    for post in posts:
+        entry = {'loc': f"{site_url}{post['url']}", 'priority': '0.8'}
+        date = post['date']
+        if hasattr(date, 'strftime'):
+            entry['lastmod'] = date.strftime('%Y-%m-%d')
+        elif isinstance(date, str) and date:
+            entry['lastmod'] = date[:10]
+        sitemap_entries.append(entry)
+    for page in nav_pages:
+        sitemap_entries.append({'loc': f"{site_url}{page['url']}", 'priority': '0.6'})
+    for tag in processed_tags.values():
+        sitemap_entries.append({'loc': f"{site_url}{tag['url']}", 'priority': '0.5'})
+
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for entry in sitemap_entries:
+        lines.append('  <url>')
+        lines.append(f"    <loc>{entry['loc']}</loc>")
+        if 'lastmod' in entry:
+            lines.append(f"    <lastmod>{entry['lastmod']}</lastmod>")
+        lines.append(f"    <priority>{entry['priority']}</priority>")
+        lines.append('  </url>')
+    lines.append('</urlset>')
+    write_page('sitemap.xml', '\n'.join(lines))
+
+    # Generate robots.txt
+    write_page('robots.txt', f"User-agent: *\nAllow: /\n\nSitemap: {site_url}/sitemap.xml\n")
+
+    # Generate RSS feed
+    def to_rfc2822(date):
+        if hasattr(date, 'strftime'):
+            return date.strftime('%a, %d %b %Y 00:00:00 +0000')
+        if isinstance(date, str) and date:
+            try:
+                return datetime.strptime(date[:10], '%Y-%m-%d').strftime('%a, %d %b %Y 00:00:00 +0000')
+            except ValueError:
+                pass
+        return ''
+
+    rss_lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+        '  <channel>',
+        f'    <title>{CONFIG["site_title"]}</title>',
+        f'    <link>{site_url}/</link>',
+        f'    <description>{CONFIG["site_description"]}</description>',
+        '    <language>en</language>',
+        f'    <lastBuildDate>{to_rfc2822(datetime.now())}</lastBuildDate>',
+        f'    <atom:link href="{site_url}/feed.xml" rel="self" type="application/rss+xml"/>',
+    ]
+    for post in posts:
+        pub_date = to_rfc2822(post['date'])
+        post_url = f"{site_url}{post['url']}"
+        rss_lines += [
+            '    <item>',
+            f'      <title>{post["title"]}</title>',
+            f'      <link>{post_url}</link>',
+            f'      <guid>{post_url}</guid>',
+        ]
+        if pub_date:
+            rss_lines.append(f'      <pubDate>{pub_date}</pubDate>')
+        rss_lines.append(f'      <description><![CDATA[{post["content"]}]]></description>')
+        rss_lines.append('    </item>')
+    rss_lines += ['  </channel>', '</rss>']
+    write_page('feed.xml', '\n'.join(rss_lines))
+
+    # Copy static assets
+    static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):
         shutil.copytree(
-            static_dir, 
+            static_dir,
             os.path.join(CONFIG['output_dir'], 'static'),
             dirs_exist_ok=True
         )
-    
-    print(f"Site built successfully with {len(posts)} posts and {len(processed_tags)} tags")
+
+    # Copy and optimize site images
+    images_optimized = 0
+    images_dir = CONFIG['images_dir']
+    if os.path.exists(images_dir):
+        output_images_dir = os.path.join(CONFIG['output_dir'], images_dir)
+        if CONFIG['image_optimize']:
+            from PIL import Image
+            max_width = CONFIG['image_max_width']
+            jpeg_quality = CONFIG['image_quality']
+            for root, _, files in os.walk(images_dir):
+                for file in files:
+                    src_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(src_path, images_dir)
+                    dst_path = os.path.join(output_images_dir, rel_path)
+                    os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+                    try:
+                        with Image.open(src_path) as img:
+                            if img.width > max_width:
+                                ratio = max_width / img.width
+                                img = img.resize((max_width, int(img.height * ratio)), Image.LANCZOS)
+                            ext = os.path.splitext(file)[1].lower()
+                            if ext in ('.jpg', '.jpeg'):
+                                img.save(dst_path, 'JPEG', quality=jpeg_quality, optimize=True)
+                            elif ext == '.png':
+                                img.save(dst_path, 'PNG', optimize=True)
+                            else:
+                                img.save(dst_path)
+                            images_optimized += 1
+                    except Exception:
+                        shutil.copy2(src_path, dst_path)
+        else:
+            shutil.copytree(images_dir, output_images_dir, dirs_exist_ok=True)
+
+    elapsed = (datetime.now() - start_time).total_seconds()
+    images_str = f", and optimized {images_optimized} images" if images_optimized else ""
+    print(f"{CONFIG['site_title']} built successfully! Made {len(posts)} posts, {len(processed_tags)} tags{images_str} in {elapsed:.2f}s")
 
 if __name__ == "__main__":
     build_site()

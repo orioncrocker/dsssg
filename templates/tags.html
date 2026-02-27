@@ -12,13 +12,16 @@
     <div class="page-header">
         <h1>Tags</h1>
         <p>Browse content by topic</p>
+        <div class="sort-toggle">
+            <button id="sort-count" class="sort-btn active" onclick="sortTags('count')">By Count</button>
+            <button id="sort-alpha" class="sort-btn" onclick="sortTags('alpha')">A–Z</button>
+        </div>
     </div>
 
-    <!-- Tags sorted by popularity (post count) -->
     <section class="tags-list">
-        <div class="tags-grid">
+        <div class="tags-grid" id="tags-grid">
             {% for tag in tags|sort(attribute='count', reverse=true) %}
-            <div class="tag-item">
+            <div class="tag-item" data-name="{{ tag.display_name }}" data-count="{{ tag.count }}">
                 <a href="{{ tag.url }}" class="tag tag-lg">
                     {{ tag.display_name }}
                     <span class="count">({{ tag.count }})</span>
@@ -31,6 +34,19 @@
             {% endfor %}
         </div>
     </section>
+
+    <script>
+        function sortTags(method) {
+            const grid = document.getElementById('tags-grid');
+            const items = Array.from(grid.querySelectorAll('.tag-item'));
+            items.sort((a, b) => method === 'alpha'
+                ? a.dataset.name.localeCompare(b.dataset.name)
+                : b.dataset.count - a.dataset.count);
+            items.forEach(item => grid.appendChild(item));
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('sort-' + method).classList.add('active');
+        }
+    </script>
 </section>
 {% endblock %}
 
@@ -48,6 +64,28 @@
 
     .page-header h1 {
         margin-bottom: 0.5rem;
+    }
+
+    .sort-toggle {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .sort-btn {
+        background: none;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 0.2rem 0.6rem;
+        font-family: inherit;
+        font-size: 0.75rem;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    .sort-btn.active {
+        background-color: var(--primary);
+        color: var(--code-bg);
     }
 
     /* Grid layout for the tags */

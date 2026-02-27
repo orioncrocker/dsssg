@@ -42,5 +42,26 @@
         {{ post.content }}
     </div>
 
+    <div class="post-footer">
+        {% if related_posts %}
+        <div class="related-posts">
+            <h3>Related Posts</h3>
+            <ul>
+                {% for rp in related_posts %}
+                <li><a href="{{ rp.url }}">{{ rp.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <a href="/" class="all-posts-link">← All Posts</a>
+        {% if post.processed_tags %}
+        <div class="tags">
+            {% for tag in post.processed_tags %}
+            <a href="{{ tag.url }}" class="tag">{{ tag.display_name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
 </article>
 {% endblock %}

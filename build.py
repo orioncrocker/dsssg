@@ -155,6 +155,22 @@ def process_tag(tag_name, tags_metadata):
     
     return tag
 
+def get_related_posts(post, all_posts, n=3):
+    """Return up to n posts most related to the given post by shared tag count."""
+    current_tags = set(post.get('tags', []))
+    if not current_tags:
+        return []
+    scored = []
+    for other in all_posts:
+        if other['slug'] == post['slug']:
+            continue
+        shared = current_tags & set(other.get('tags', []))
+        if shared:
+            scored.append((len(shared), other))
+    scored.sort(key=lambda x: x[0], reverse=True)
+    return [p for _, p in scored[:n]]
+
+
 def process_image_captions(html_content):
     """
     Process HTML content to add captions to images based on their alt text.
@@ -428,7 +444,8 @@ def build_site():
     # Generate post pages
     for post in posts:
         post['processed_tags'] = [processed_tags[t] for t in post['tags'] if t in processed_tags]
-        write_page(post['url'], post_template.render(post=post, site=CONFIG, posts=posts, tags=all_tags_list))
+        related = get_related_posts(post, posts)
+        write_page(post['url'], post_template.render(post=post, site=CONFIG, posts=posts, tags=all_tags_list, related_posts=related))
 
     # Generate tag pages
     tag_template = env.get_template(CONFIG['tag_template'])

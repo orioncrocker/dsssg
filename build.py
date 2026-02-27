@@ -46,6 +46,7 @@ def load_config():
         'date_format': '%Y-%m-%d',
         'tags_file': 'tags.yaml',
         'images_dir': 'images',
+        'files_dir': None,
         'root_dir': 'root',
         'footer_text': None,
         'footer_credit': None,
@@ -522,6 +523,15 @@ def build_site():
         shutil.copytree(
             static_dir,
             os.path.join(CONFIG['output_dir'], 'static'),
+            dirs_exist_ok=True
+        )
+
+    # Copy files directory
+    files_dir = CONFIG['files_dir']
+    if files_dir and os.path.exists(files_dir):
+        shutil.copytree(
+            files_dir,
+            os.path.join(CONFIG['output_dir'], 'files'),
             dirs_exist_ok=True
         )
 

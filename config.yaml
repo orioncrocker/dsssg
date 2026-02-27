@@ -10,6 +10,7 @@ output_dir: "site"
 tags_file: "tags.yaml"
 
 # images_dir: "images"       # Directory of images copied to site/images/
+# files_dir: "files"         # Directory of files copied to site/files/ (PDFs, downloads, etc.)
 # image_optimize: false      # Optimize images during build (requires Pillow)
 # image_max_width: 1200      # Maximum image width in pixels (only applied when optimizing)
 # image_quality: 85          # JPEG compression quality 1-95 (only applied when optimizing)

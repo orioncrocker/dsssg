@@ -32,6 +32,8 @@
     <!-- CSS and other assets -->
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}
+
+    <script>if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');</script>
 </head>
 <body>
     <header>
@@ -43,9 +45,27 @@
                 {% for page in nav_pages %}
                 <a href="{{ page.url }}">{{ page.title }}</a>
                 {% endfor %}
+                <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme">☀</button>
             </nav>
         </div>
     </header>
+
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.getElementById('theme-toggle').textContent = '🌙';
+
+        function toggleTheme() {
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-toggle').textContent = '☀';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-toggle').textContent = '🌙';
+            }
+        }
+    </script>
 
     <main class="container">
         {% block content %}{% endblock %}

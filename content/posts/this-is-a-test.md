@@ -4,7 +4,7 @@ date: 2025-05-10
 tags: [technology, linux, web-dev]
 ---
 
-Here post contains a few examples of how Markdown is rendered into HTML. 
+This post contains a few examples of how Markdown is rendered into HTML.
 
 To learn more visit <https://www.markdownguide.org/cheat-sheet>
 
@@ -14,7 +14,7 @@ To learn more visit <https://www.markdownguide.org/cheat-sheet>
 
 ### Image test:
 
-![this is a caption for the image](../static/images/godzilla.png)
+![this is a caption for the image](/static/images/godzilla.png)
 
 ### Code blocks:
 
@@ -45,5 +45,6 @@ Output:
 - So let's make sure they are formatted correctly
 
 Numbered lists are important too
+
 1. First item
 2. Second item

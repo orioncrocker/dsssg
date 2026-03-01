@@ -553,7 +553,7 @@ def build_site():
     # Copy and optimize site images
     images_optimized = 0
     images_dir = CONFIG['images_dir']
-    if os.path.exists(images_dir):
+    if images_dir and os.path.exists(images_dir):
         output_images_dir = os.path.join(CONFIG['output_dir'], images_dir)
         if CONFIG['image_optimize']:
             from PIL import Image

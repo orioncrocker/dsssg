@@ -8,6 +8,15 @@
     --code-bg: #1E1C1C;
 }
 
+[data-theme="light"] {
+    --background: #F8F5F0;
+    --text-color: #1E1D1E;
+    --primary: #BF5841;
+    --secondary: #8C8473;
+    --tertiary: #7A6F62;
+    --code-bg: #EDE9E3;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -48,6 +57,16 @@ a:hover {
 /* Lists - common styles */
 ul, ol {
     margin-left: 1rem;
+}
+
+/* Theme toggle button */
+#theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--background);
+    font-size: 1rem;
+    padding: 0;
 }
 
 /* Base styles for code blocks (pre) */
@@ -120,25 +139,6 @@ nav a {
     color: var(--background);
 }
 
-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 1.5rem;
-    margin-left: 0;
-    padding-left: 0;
-}
-
-nav ul li a {
-    color: var(--primary);
-    text-decoration: none;
-    padding: 0.25rem 0;
-}
-
-nav ul li a:hover {
-    color: var(--secondary);
-    text-decoration: underline;
-}
-
 img {
     padding: 1rem;
     display: block;
@@ -171,11 +171,6 @@ img {
     margin-bottom: 1.5rem;
 }
 
-.post-summary h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
 /* Post Metadata */
 .post-meta {
     font-size: 0.85rem;
@@ -194,16 +189,12 @@ img {
     gap: 0.5rem;
 }
 
-.tags::before {
-    content: " :: ";
-    margin: 0 0.25rem;
-}
-
 .tag {
     display: inline-flex;
     align-items: center;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.75rem;
+    gap: 0.25rem;
+    padding: var(--tag-padding);
+    font-size: var(--tag-font-size);
     border-radius: 3px;
     background-color: var(--primary);
     color: var(--code-bg);
@@ -291,6 +282,14 @@ img {
     color: var(--primary);
 }
 
+.related-posts li.all-posts-item {
+    padding-left: 0;
+}
+
+.related-posts li.all-posts-item::before {
+    content: "";
+}
+
 .tag-header {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
@@ -309,10 +308,5 @@ footer {
 @media (max-width: 768px) {
     body {
         padding: 1rem;
-    }
-    
-    nav ul {
-        flex-direction: row;
-        justify-content: space-between;
     }
 }

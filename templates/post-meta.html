@@ -1,8 +1,9 @@
 <!-- post-meta.html - A reusable template for post metadata -->
 
+{% if post.date or post.processed_tags %}
 <div class="post-meta">
-    <time datetime="{{ post.date|date('%Y-%m-%d') }}">{{ post.date|date(site.date_format) }}{% if post.processed_tags %} {{ site.meta_delimiter }}
-    {% endif %}</time>
+    {% if post.date %}<time datetime="{{ post.date|date('%Y-%m-%d') }}">{{ post.date|date(site.date_format) }}{% if post.processed_tags %} {{ site.meta_delimiter }}
+    {% endif %}</time>{% endif %}
     {% if post.processed_tags %}
     <div class="tags">
         {% for tag in post.processed_tags %}
@@ -11,3 +12,4 @@
     </div>
     {% endif %}
 </div>
+{% endif %}

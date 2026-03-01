@@ -11,7 +11,7 @@
     <meta name="description" content="{% block description %}{{ site.site_description }}{% endblock %}">
 
     <!-- Additional meta tags -->
-    <meta name="author" content="{{ site.author|default('Site Author') }}">
+    <meta name="author" content="{{ site.author|default('Site Author', boolean=True) }}">
 
     <!-- Open Graph tags for social sharing -->
     <meta property="og:title" content="{% block og_title %}{{ site.site_title }}{% endblock %}">
@@ -74,7 +74,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; {{ now.year }} {{ site.author|default(site.site_title) }}{% if site.footer_text %} {{ site.footer_text | safe }}{% endif %}</p>
+            <p>&copy; {{ now.year }} {{ site.author|default(site.site_title, boolean=True) }}{% if site.footer_text %} {{ site.footer_text | safe }}{% endif %}</p>
             {% if site.footer_credit %}<p>{{ site.footer_credit | safe }}</p>{% endif %}
         </div>
     </footer>

@@ -6,8 +6,6 @@
 #   - display_name: How the tag should be displayed (if different from slug)
 #   - color: A hex color code for styling (optional)
 #   - icon: An icon identifier (optional)
-#   - featured: Boolean to indicate important tags (optional)
-#   - order: Number to control display order (optional, lower numbers appear first)
 
 # Music-related tags
 music:

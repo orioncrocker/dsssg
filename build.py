@@ -572,12 +572,15 @@ def build_site():
                     rel_path = os.path.relpath(src_path, images_dir)
                     dst_path = os.path.join(output_images_dir, rel_path)
                     os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+                    ext = os.path.splitext(file)[1].lower()
+                    if ext == '.gif':
+                        shutil.copy2(src_path, dst_path)
+                        continue
                     try:
                         with Image.open(src_path) as img:
                             if img.width > max_width:
                                 ratio = max_width / img.width
                                 img = img.resize((max_width, int(img.height * ratio)), Image.LANCZOS)
-                            ext = os.path.splitext(file)[1].lower()
                             if ext in ('.jpg', '.jpeg'):
                                 img.save(dst_path, 'JPEG', quality=jpeg_quality, optimize=True)
                             elif ext == '.png':

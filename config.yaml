@@ -17,5 +17,6 @@ tags_file: "tags.yaml"
 # root_dir: "root"           # Pages built with site template but excluded from navbar (e.g. 404)
 author: ""                  # Site author name used in footer and post metadata
 # date_format: "%B %d, %Y"  # strftime format for displayed dates
+# meta_delimiter: ""         # Separator rendered between post date and tags (e.g. "::")
 # footer_text: ""            # First footer line (site-specific text)
 footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"  # Second footer line

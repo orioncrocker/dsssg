@@ -48,6 +48,7 @@ def load_config():
         'images_dir': 'images',
         'files_dir': None,
         'root_dir': 'root',
+        'meta_delimiter': '',
         'footer_text': None,
         'footer_credit': None,
         'image_optimize': False,

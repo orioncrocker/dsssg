@@ -20,7 +20,7 @@
 
     <section class="tags-list">
         <div class="tags-grid" id="tags-grid">
-            {% for tag in tags|sort(attribute='count', reverse=true) %}
+            {% for tag in tags|sort(attribute='display_name') %}
             <div class="tag-item" data-name="{{ tag.display_name }}" data-count="{{ tag.count }}">
                 <a href="{{ tag.url }}" class="tag tag-lg">
                     {{ tag.display_name }}
@@ -46,6 +46,7 @@
             document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('sort-' + method).classList.add('active');
         }
+        sortTags('count');
     </script>
 </section>
 {% endblock %}

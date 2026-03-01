@@ -14,7 +14,7 @@ clean:
 	rm -rf site/*
 
 local:
-	sudo rsync -auv site/* /var/www/html
+	sudo rsync -ahvc --checksum site/* /var/www/html
 
 deploy:
-	rsync -ahvuz site/* $(DEPLOY_USER)@$(DEPLOY_HOST):$(DEPLOY_PATH)
+	rsync -ahvcz --checksum site/* $(DEPLOY_USER)@$(DEPLOY_HOST):$(DEPLOY_PATH)

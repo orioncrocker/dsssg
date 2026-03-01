@@ -509,7 +509,7 @@ def build_site():
         f'    <description>{CONFIG["site_description"]}</description>',
         '    <language>en</language>',
         f'    <lastBuildDate>{to_rfc2822(datetime.now())}</lastBuildDate>',
-        f'    <atom:link href="{site_url}/feed.xml" rel="self" type="application/rss+xml"/>',
+        f'    <atom:link href="{site_url}/rss.xml" rel="self" type="application/rss+xml"/>',
     ]
     for post in posts:
         pub_date = to_rfc2822(post['date'])
@@ -525,7 +525,7 @@ def build_site():
         rss_lines.append(f'      <description><![CDATA[{post["content"]}]]></description>')
         rss_lines.append('    </item>')
     rss_lines += ['  </channel>', '</rss>']
-    write_page('feed.xml', '\n'.join(rss_lines))
+    write_page('rss.xml', '\n'.join(rss_lines))
 
     # Copy dsssg bundled static assets first (parent site can override)
     dsssg_static = os.path.join(os.path.dirname(__file__), 'static')

@@ -243,7 +243,7 @@ site/
 ├── tags.html
 ├── sitemap.xml
 ├── robots.txt
-├── feed.xml
+├── rss.xml
 ├── 404.html           # from content/root/
 ├── about.html         # from content/nav/
 ├── posts/

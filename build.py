@@ -221,13 +221,6 @@ def build_site():
             return date_value.strftime(format_string)
         return date_value
 
-    def regex_search(value, pattern):
-        """Search for a pattern in a string"""
-        if value is None:
-            return ''
-        match = re.search(pattern, value)
-        return match.group(0) if match else ''
-
     def regex_replace(value, pattern, replacement):
         """Replace a pattern in a string"""
         if value is None:
@@ -388,7 +381,6 @@ def build_site():
 
     env.filters['date'] = date_filter
     env.filters['safe_truncate'] = safe_html_truncate
-    env.filters['regex_search'] = regex_search
     env.filters['regex_replace'] = regex_replace
     env.filters['striptags_excerpt'] = striptags_excerpt
 

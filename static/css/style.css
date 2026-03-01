@@ -1,7 +1,5 @@
-/* Updated colors to match Monokai Pro scheme */
-/* Variables for Monokai Pro colors */
+/* dsssg default color scheme — override in your site's stylesheet */
 :root {
-    /* Main colors */
     --background: #1E1D1E;
     --text-color: #F2EFE9;
     --primary: #BF5841;
@@ -80,11 +78,6 @@ pre code {
     border: none;
 }
 
-/* Remove double styling for code inside pre blocks */
-pre code {
-    background-color: transparent;
-    padding: 0;
-}
 
 /* Header and Navigation */
 header {
@@ -142,7 +135,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: var(--green);
+    color: var(--secondary);
     text-decoration: underline;
 }
 
@@ -295,14 +288,7 @@ img {
     content: ">>";
     position: absolute;
     left: 0;
-    color: var(--orange);
-}
-
-.related-posts small {
-    display: block;
-    color: var(--secondary);
-    margin-top: 0.25rem;
-    margin-left: 1rem;
+    color: var(--primary);
 }
 
 .tag-header {
@@ -310,10 +296,6 @@ img {
     padding-bottom: 1rem;
 }
 
-.tag-description {
-    color: var(--text-color);
-    margin-top: 0.5rem;
-}
 
 /* Footer */
 footer {

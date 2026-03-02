@@ -34,6 +34,8 @@
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}
 
+    {% if site.additional_scripts %}{{ site.additional_scripts | safe }}{% endif %}
+
     <script>if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');</script>
 </head>
 <body>

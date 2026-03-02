@@ -20,3 +20,5 @@ author: "The Author"                  # Site author name used in footer and post
 # meta_delimiter: ""         # Separator rendered between post date and tags (e.g. "::")
 # footer_text: ""            # First footer line (site-specific text)
 footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"  # Second footer line
+# additional_scripts: |      # Raw HTML injected into <head> (tracking scripts, etc.)
+#   <script async src="..." data-site-id="..."></script>

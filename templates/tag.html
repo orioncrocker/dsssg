@@ -20,7 +20,7 @@
     <div class="tag-header">
         <h3>
             {% if tag.icon %}<span class="icon large-icon" {% if tag.color %}style="color: {{ tag.color }};"{% endif %}>{{ tag.icon }}</span>{% endif %}
-            {{ tag.display_name }}
+            {{ tag.display_name }}: {{ posts|length }} post{% if posts|length != 1 %}s{% endif %}
         </h3>
 
         {% if tag.description %}
@@ -29,9 +29,6 @@
         </div>
         {% endif %}
 
-        <div class="post-count">
-            {{ posts|length }} post{% if posts|length != 1 %}s{% endif %}
-        </div>
     </div>
 
     <div class="post-list">

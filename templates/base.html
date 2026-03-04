@@ -44,7 +44,7 @@
             <div class="site-title"><a href="/">{{ site.site_title }}</a></div>
             <nav>
                 <a href="/">Posts</a>
-                <a href="/tags.html">Tags</a>
+                <a href="{{ tags_url }}">Tags</a>
                 {% for page in nav_pages %}
                 <a href="{{ page.url }}">{{ page.title }}</a>
                 {% endfor %}

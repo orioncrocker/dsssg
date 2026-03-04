@@ -22,3 +22,4 @@ author: "The Author"                  # Site author name used in footer and post
 footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"  # Second footer line
 # additional_scripts: |      # Raw HTML injected into <head> (tracking scripts, etc.)
 #   <script async src="..." data-site-id="..."></script>
+# clean_urls: false          # Omit .html from all generated links (requires server to serve .html files for extension-less URLs)

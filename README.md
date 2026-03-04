@@ -118,6 +118,8 @@ All configuration lives in `config.yaml` (read from the current working director
 | `root_dir` | `"content/root"` | *(optional)* Pages built with site template, output to site root, excluded from navbar |
 | `footer_text` | `null` | *(optional)* First footer line (site-specific text) |
 | `footer_credit` | `null` | *(optional)* Second footer line (e.g. attribution) |
+| `additional_scripts` | `null` | *(optional)* Raw HTML injected into `<head>` (tracking scripts, etc.) |
+| `clean_urls` | `false` | *(optional)* Omit `.html` from all generated links — requires the web server to serve `.html` files for extension-less URLs (e.g. nginx `try_files $uri.html`) |
 
 ---
 
@@ -174,7 +176,7 @@ my-tag:
   order: 1             # optional, lower = first
 ```
 
-Tag archive pages are generated at `/tags/{tag-slug}.html`.
+Tag archive pages are generated at `/tags/{tag-slug}.html` (or `/tags/{tag-slug}` with `clean_urls: true`).
 
 ---
 

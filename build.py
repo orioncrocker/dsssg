@@ -110,17 +110,26 @@ def clean_output_directory():
     os.makedirs(os.path.join(CONFIG['output_dir'], 'tags'), exist_ok=True)
     os.makedirs(os.path.join(CONFIG['output_dir'], 'posts'), exist_ok=True)
 
+def html_ext(value, force=False):
+    """Append .html to value unless clean_urls is enabled or value already has a file extension.
+    Use force=True to always append .html regardless of clean_urls (for disk paths)."""
+    if '.' in os.path.basename(value):
+        return value
+    if not CONFIG.get('clean_urls') or force:
+        return value + '.html'
+    return value
+
 def generate_nav_url(slug):
     """Generate URL for a nav or root page"""
-    return f"/{slug}.html"
+    return html_ext(f"/{slug}")
 
 def generate_post_url(slug):
     """Generate URL for a post"""
-    return f"/posts/{slug}.html"
+    return html_ext(f"/posts/{slug}")
 
 def generate_tag_url(slug):
     """Generate URL for a tag page"""
-    return f"/tags/{slug}.html"
+    return html_ext(f"/tags/{slug}")
 
 def load_tag_metadata():
     """Load tag metadata from tags.yaml file if it exists"""
@@ -388,6 +397,7 @@ def build_site():
 
     # Add current date to templates
     env.globals['now'] = datetime.now()
+    env.globals['tags_url'] = html_ext('/tags')
     
     # Clean output directory
     clean_output_directory()
@@ -424,7 +434,7 @@ def build_site():
     all_tags_list = list(processed_tags.values())
 
     def write_page(url, html):
-        output_path = os.path.join(CONFIG['output_dir'], url.lstrip('/'))
+        output_path = os.path.join(CONFIG['output_dir'], html_ext(url, force=True).lstrip('/'))
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
@@ -460,7 +470,7 @@ def build_site():
     site_url = CONFIG['site_url'].rstrip('/')
     sitemap_entries = [
         {'loc': f"{site_url}/", 'priority': '1.0'},
-        {'loc': f"{site_url}/tags.html", 'priority': '0.5'},
+        {'loc': f"{site_url}{html_ext('/tags')}", 'priority': '0.5'},
     ]
     for post in posts:
         entry = {'loc': f"{site_url}{post['url']}", 'priority': '0.8'}

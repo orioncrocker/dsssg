@@ -171,9 +171,6 @@ my-tag:
   display_name: "My Tag"
   description: "Posts about this topic."
   color: "#58ACFA"     # optional
-  icon: "🏷️"          # optional
-  featured: true       # optional
-  order: 1             # optional, lower = first
 ```
 
 Tag archive pages are generated at `/tags/{tag-slug}.html` (or `/tags/{tag-slug}` with `clean_urls: true`).

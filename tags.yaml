@@ -5,7 +5,6 @@
 #   - description: A brief explanation of what the tag represents
 #   - display_name: How the tag should be displayed (if different from slug)
 #   - color: A hex color code for styling (optional)
-#   - icon: An icon identifier (optional)
 
 # Music-related tags
 music:

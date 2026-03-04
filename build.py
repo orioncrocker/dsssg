@@ -160,7 +160,6 @@ def process_tag(tag_name, tags_metadata):
         'display_name': metadata.get('display_name', tag_name),
         'description': metadata.get('description', ''),
         'color': metadata.get('color', None),
-        'icon': metadata.get('icon', None),
         'url': generate_tag_url(slug)
     }
     
@@ -381,7 +380,7 @@ def build_site():
                         'thumbnail': thumbnail,
                     }
 
-                    if is_nav is False:
+                    if not is_nav:
                         posts.append(post)
 
                         # Add post to each of its tags

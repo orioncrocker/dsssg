@@ -6,6 +6,8 @@ This project represents a reaction to ubiquitous and bloated web frameworks that
 
 Drop in a few Markdown files, configure `config.yaml`, and run `make build`. That's it.
 
+For a live example, see [orionc.dev](https://orionc.dev).
+
 ---
 
 ## Requirements

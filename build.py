@@ -51,6 +51,7 @@ def load_config():
         'meta_delimiter': '',
         'footer_text': None,
         'footer_credit': None,
+        'footer_links': None,
         'additional_scripts': None,
         'image_optimize': False,
         'image_max_width': 1200,

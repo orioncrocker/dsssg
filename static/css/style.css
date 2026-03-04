@@ -298,10 +298,7 @@ img {
 
 /* Footer */
 footer {
-    margin-top: 3rem;
-    padding-top: 1rem;
     color: var(--secondary);
-    font-size: 0.75rem;
 }
 
 /* Responsive */

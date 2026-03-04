@@ -20,6 +20,9 @@ tags_file: "tags.yaml"
 # meta_delimiter: ""          # Separator between post date and tags (e.g. "::")
 # footer_text: ""             # First footer line (site-specific text)
 footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"
+# footer_links:               # Links shown in the right column of the footer
+#   - text: "Link Name"
+#     url: "/page"
 
 # ── Images ────────────────────────────────────────────────────────────────────
 # image_optimize: false       # Optimize images during build (requires Pillow)

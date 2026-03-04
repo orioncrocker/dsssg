@@ -76,8 +76,17 @@
 
     <footer>
         <div class="container">
-            <p>&copy; {{ now.year }} {{ site.author|default(site.site_title, boolean=True) }}{% if site.footer_text %} {{ site.footer_text | safe }}{% endif %}</p>
-            {% if site.footer_credit %}<p>{{ site.footer_credit | safe }}</p>{% endif %}
+            <div class="footer-left">
+                <p>&copy; {{ now.year }} {{ site.author|default(site.site_title, boolean=True) }}{% if site.footer_text %} {{ site.footer_text | safe }}{% endif %}</p>
+                {% if site.footer_credit %}<p>{{ site.footer_credit | safe }}</p>{% endif %}
+            </div>
+            {% if site.footer_links %}
+            <div class="footer-right">
+                {% for link in site.footer_links %}
+                <a href="{{ link.url }}">{{ link.text }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
     </footer>
 </body>

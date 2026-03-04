@@ -1,25 +1,32 @@
+# ── Site Identity ─────────────────────────────────────────────────────────────
 site_title: "My Website"
 site_description: "A tagged website built with dsssg"
 site_url: "https://example.com"
+author: "The Author"
 
+# ── Directories ───────────────────────────────────────────────────────────────
 content_dir: "content/posts"
 nav_dir: "content/nav"
+# root_dir: "root"           # Pages built with site template but excluded from navbar (e.g. 404)
 template_dir: "templates"
 static_dir: "static"
 output_dir: "site"
 tags_file: "tags.yaml"
+# images_dir: "images"       # Images copied to site/images/
+# files_dir: "files"         # Files copied to site/files/ (PDFs, downloads, etc.)
 
-# images_dir: "images"       # Directory of images copied to site/images/
-# files_dir: "files"         # Directory of files copied to site/files/ (PDFs, downloads, etc.)
-# image_optimize: false      # Optimize images during build (requires Pillow)
-# image_max_width: 1200      # Maximum image width in pixels (only applied when optimizing)
-# image_quality: 85          # JPEG compression quality 1-95 (only applied when optimizing)
-# root_dir: "root"           # Pages built with site template but excluded from navbar (e.g. 404)
-author: "The Author"                  # Site author name used in footer and post metadata
-# date_format: "%B %d, %Y"  # strftime format for displayed dates
-# meta_delimiter: ""         # Separator rendered between post date and tags (e.g. "::")
-# footer_text: ""            # First footer line (site-specific text)
-footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"  # Second footer line
-# additional_scripts: |      # Raw HTML injected into <head> (tracking scripts, etc.)
+# ── Display ───────────────────────────────────────────────────────────────────
+# date_format: "%B %d, %Y"   # strftime format for displayed dates
+# meta_delimiter: ""          # Separator between post date and tags (e.g. "::")
+# footer_text: ""             # First footer line (site-specific text)
+footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"
+
+# ── Images ────────────────────────────────────────────────────────────────────
+# image_optimize: false       # Optimize images during build (requires Pillow)
+# image_max_width: 1200       # Maximum image width in pixels
+# image_quality: 85           # JPEG compression quality 1-95
+
+# ── URLs & Scripts ────────────────────────────────────────────────────────────
+# clean_urls: false           # Omit .html from all generated links (requires server to serve .html files for extension-less URLs)
+# additional_scripts: |       # Raw HTML injected into <head> (tracking scripts, etc.)
 #   <script async src="..." data-site-id="..."></script>
-# clean_urls: false          # Omit .html from all generated links (requires server to serve .html files for extension-less URLs)

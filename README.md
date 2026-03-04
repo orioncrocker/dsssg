@@ -48,7 +48,7 @@ To use dsssg as a submodule in a separate site repository:
 ```sh
 mkdir mysite && cd mysite
 git init
-git submodule add <repo-url> dssg
+git submodule add <repo-url> dsssg
 ```
 
 Create a `config.yaml` in the site root pointing to your content directories:
@@ -62,7 +62,7 @@ author: "Your Name"
 content_dir: "content/posts"
 nav_dir: "content/nav"
 root_dir: "content/root"
-template_dir: "dssg/templates"
+template_dir: "dsssg/templates"
 static_dir: "static"
 output_dir: "site"
 tags_file: "tags.yaml"
@@ -72,14 +72,14 @@ images_dir: "static/images"
 Copy the Makefile from dsssg to the site root:
 
 ```sh
-cp dssg/Makefile .
+cp dsssg/Makefile .
 ```
 
 Then add your content:
 
 ```
 mysite/
-├── dssg/               # dsssg submodule
+├── dsssg/              # dsssg submodule
 ├── config.yaml
 ├── Makefile
 ├── tags.yaml
@@ -93,7 +93,7 @@ mysite/
     └── images/         # Images served at /static/images/
 ```
 
-Changes to the generator itself (templates, build.py, CSS) should be committed inside the `dssg/` submodule separately.
+Changes to the generator itself (templates, build.py, CSS) should be committed inside the `dsssg/` submodule separately.
 
 ---
 
@@ -101,25 +101,52 @@ Changes to the generator itself (templates, build.py, CSS) should be committed i
 
 All configuration lives in `config.yaml` (read from the current working directory at build time).
 
+### Site Identity
+
 | Key | Default | Description |
 |-----|---------|-------------|
 | `site_title` | `"My Website"` | Site name, used in `<title>` and footer |
 | `site_description` | `"A tagged website..."` | Meta description for the homepage |
 | `site_url` | `"https://example.com"` | Base URL used for absolute links and OG tags |
 | `author` | `""` | Author name used in footer and post metadata |
-| `date_format` | `"%Y-%m-%d"` | strftime format for displayed post dates |
+
+### Directories
+
+| Key | Default | Description |
+|-----|---------|-------------|
 | `content_dir` | `"content/posts"` | Directory of blog post Markdown files |
 | `nav_dir` | `"content/nav"` | Directory of navbar page Markdown files |
+| `root_dir` | `"content/root"` | *(optional)* Pages built with site template, output to site root, excluded from navbar |
 | `template_dir` | `"templates"` | Jinja2 templates directory |
 | `static_dir` | `"static"` | Static assets copied to `site/static/` |
 | `output_dir` | `"site"` | Build output directory |
 | `tags_file` | `"tags.yaml"` | Tag metadata definitions |
 | `images_dir` | `"static/images"` | *(optional)* Images directory, copied to `site/{images_dir}/` |
-| `root_dir` | `"content/root"` | *(optional)* Pages built with site template, output to site root, excluded from navbar |
+| `files_dir` | `null` | *(optional)* Files directory, copied to `site/files/` (PDFs, downloads, etc.) |
+
+### Display
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `date_format` | `"%Y-%m-%d"` | strftime format for displayed post dates |
+| `meta_delimiter` | `""` | Separator rendered between post date and tags (e.g. `"::"`) |
 | `footer_text` | `null` | *(optional)* First footer line (site-specific text) |
 | `footer_credit` | `null` | *(optional)* Second footer line (e.g. attribution) |
-| `additional_scripts` | `null` | *(optional)* Raw HTML injected into `<head>` (tracking scripts, etc.) |
-| `clean_urls` | `false` | *(optional)* Omit `.html` from all generated links — requires the web server to serve `.html` files for extension-less URLs (e.g. nginx `try_files $uri.html`) |
+
+### Images
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `image_optimize` | `false` | Optimize images during build (requires Pillow) |
+| `image_max_width` | `1200` | Maximum image width in pixels |
+| `image_quality` | `85` | JPEG compression quality 1–95 |
+
+### URLs & Scripts
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `clean_urls` | `false` | Omit `.html` from all generated links — requires the web server to serve `.html` files for extension-less URLs (e.g. nginx `try_files $uri.html`) |
+| `additional_scripts` | `null` | Raw HTML injected into `<head>` (tracking scripts, etc.) |
 
 ---
 
@@ -173,7 +200,7 @@ my-tag:
   color: "#58ACFA"     # optional
 ```
 
-Tag archive pages are generated at `/tags/{tag-slug}.html` (or `/tags/{tag-slug}` with `clean_urls: true`).
+Tag archive pages are generated at `/tags/{tag-slug}` (or `/tags/{tag-slug}.html` without `clean_urls`).
 
 ---
 

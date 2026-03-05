@@ -91,6 +91,5 @@ footer .container {
 .footer-right {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
     text-align: right;
 }

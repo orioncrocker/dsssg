@@ -140,7 +140,7 @@ All configuration lives in `config.yaml` (read from the current working director
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `image_optimize` | `false` | Optimize images during build (requires Pillow) |
+| `image_optimize` | `false` | Resize and compress images during build (requires Pillow). Also strips EXIF/metadata as a side effect. |
 | `image_max_width` | `1200` | Maximum image width in pixels |
 | `image_quality` | `85` | JPEG compression quality 1–95 |
 

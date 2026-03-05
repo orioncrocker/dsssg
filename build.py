@@ -348,6 +348,10 @@ def build_site():
                     # Read markdown file
                     front_matter, html_content = read_markdown_file(file_path)
 
+                    # Skip unpublished content
+                    if front_matter.get('publish', True) is False:
+                        continue
+
                     # Get post title
                     title = front_matter.get('title', slug)
 

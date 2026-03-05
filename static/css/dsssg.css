@@ -52,6 +52,24 @@
     margin-top: 0.5rem;
 }
 
+/* Nav */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Theme toggle */
+#theme-toggle {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+}
+
 /* Footer */
 footer {
     margin-top: 3rem;

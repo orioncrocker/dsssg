@@ -61,12 +61,7 @@ ul, ol {
 
 /* Theme toggle button */
 #theme-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
     color: var(--background);
-    font-size: 1rem;
-    padding: 0;
 }
 
 /* Base styles for code blocks (pre) */
@@ -115,18 +110,6 @@ header {
     background-color: var(--primary);
     color: var(--background);
     padding: 0 14px;
-}
-
-.site-title a:hover {
-    color: var(--background);
-}
-
-.site-title::after {
-    content: "";
-    flex-shrink: 1;
-    width: 100%;
-    align-self: stretch;
-    background: repeating-linear-gradient(90deg, var(--primary), var(--primary) 2px, transparent 0, transparent 10px);
 }
 
 nav {

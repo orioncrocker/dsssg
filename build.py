@@ -378,6 +378,7 @@ def build_site():
                         'hide_title': front_matter.get('hide_title', False),
                         'nav_order': front_matter.get('nav_order', None),
                         'date': date,
+                        'updated': front_matter.get('updated', None),
                         'tags': tags,
                         'content': html_content,
                         'slug': slug,

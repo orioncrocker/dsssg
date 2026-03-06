@@ -103,13 +103,6 @@ def get_post_date(front_matter):
     """Get post date from front matter, or empty string if not set"""
     return front_matter.get('date', "")
 
-def clean_output_directory():
-    """Clean output directory"""
-    if os.path.exists(CONFIG['output_dir']):
-        shutil.rmtree(CONFIG['output_dir'])
-    os.makedirs(CONFIG['output_dir'], exist_ok=True)
-    os.makedirs(os.path.join(CONFIG['output_dir'], 'tags'), exist_ok=True)
-    os.makedirs(os.path.join(CONFIG['output_dir'], 'posts'), exist_ok=True)
 
 def html_ext(value, force=False):
     """Append .html to value unless clean_urls is enabled or value already has a file extension.
@@ -404,9 +397,11 @@ def build_site():
     env.globals['now'] = datetime.now()
     env.globals['tags_url'] = html_ext('/tags')
     
-    # Clean output directory
-    clean_output_directory()
-    
+    # Ensure output directories exist
+    os.makedirs(CONFIG['output_dir'], exist_ok=True)
+    os.makedirs(os.path.join(CONFIG['output_dir'], 'tags'), exist_ok=True)
+    os.makedirs(os.path.join(CONFIG['output_dir'], 'posts'), exist_ok=True)
+
     # Load tag metadata (if available)
     tags_metadata = load_tag_metadata()
     
@@ -548,12 +543,22 @@ def build_site():
     if os.path.exists(dsssg_static):
         shutil.copytree(dsssg_static, os.path.join(CONFIG['output_dir'], 'static'), dirs_exist_ok=True)
 
-    # Copy site static assets (overrides dsssg defaults)
+    # Copy site static assets (overrides dsssg defaults).
+    # images_dir is always excluded here — it is handled separately below.
     static_dir = CONFIG['static_dir']
     if os.path.exists(static_dir):
+        images_dir = CONFIG['images_dir']
+        ignore = None
+        if images_dir:
+            images_abs = os.path.abspath(images_dir)
+            static_abs = os.path.abspath(static_dir)
+            if images_abs.startswith(static_abs + os.sep):
+                top_level = os.path.relpath(images_abs, static_abs).split(os.sep)[0]
+                ignore = shutil.ignore_patterns(top_level)
         shutil.copytree(
             static_dir,
             os.path.join(CONFIG['output_dir'], 'static'),
+            ignore=ignore,
             dirs_exist_ok=True
         )
 
@@ -581,10 +586,13 @@ def build_site():
                     rel_path = os.path.relpath(src_path, images_dir)
                     dst_path = os.path.join(output_images_dir, rel_path)
                     os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+                    if os.path.exists(dst_path) and os.path.getmtime(dst_path) >= os.path.getmtime(src_path):
+                        continue
                     ext = os.path.splitext(file)[1].lower()
                     if ext == '.gif':
                         shutil.copy2(src_path, dst_path)
                         continue
+                    print(f"  optimizing: {src_path}")
                     try:
                         with Image.open(src_path) as img:
                             if img.width > max_width:

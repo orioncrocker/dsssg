@@ -43,11 +43,13 @@
         <div class="container">
             <div class="site-title"><a href="/">{{ site.site_title }}</a></div>
             <nav>
-                <a href="/">Posts</a>
-                <a href="{{ tags_url }}">Tags</a>
-                {% for page in nav_pages %}
-                <a href="{{ page.url }}">{{ page.title }}</a>
-                {% endfor %}
+                <div class="nav-links">
+                    <a href="/">Posts</a>
+                    <a href="{{ tags_url }}">Tags</a>
+                    {% for page in nav_pages %}
+                    <a href="{{ page.url }}">{{ page.title }}</a>
+                    {% endfor %}
+                </div>
                 <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme"></button>
             </nav>
         </div>

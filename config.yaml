@@ -19,6 +19,7 @@ tags_file: "tags.yaml"
 # date_format: "%B %d, %Y"   # strftime format for displayed dates
 # meta_delimiter: ""          # Separator between post date and tags (e.g. "::")
 footer_left:                  # Markdown items for the left footer column
+  - "&copy; YEAR The Author"
   - "Made with ❤️, powered by [dsssg](https://github.com/orioncrocker/dsssg)"
 footer_right:               # Markdown items for the right footer column
   - "[RSS](/rss.xml)"

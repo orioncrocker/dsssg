@@ -75,7 +75,6 @@
     <footer>
         <div class="container">
             <div class="footer-left">
-                <p>&copy; {{ now.year }} {{ site.author|default(site.site_title, boolean=True) }}</p>
                 {% for item in site.footer_left or [] %}
                 {{ item | md | safe }}
                 {% endfor %}

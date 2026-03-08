@@ -101,6 +101,11 @@ footer p {
     margin-bottom: 0;
 }
 
+footer img {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
 footer .container {
     display: flex;
     justify-content: space-between;

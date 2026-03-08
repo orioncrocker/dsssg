@@ -49,9 +49,8 @@ def load_config():
         'files_dir': None,
         'root_dir': 'root',
         'meta_delimiter': '',
-        'footer_text': None,
-        'footer_credit': None,
-        'footer_links': None,
+        'footer_left': None,
+        'footer_right': None,
         'additional_scripts': None,
         'image_optimize': False,
         'image_max_width': 1200,
@@ -392,6 +391,7 @@ def build_site():
     env.filters['safe_truncate'] = safe_html_truncate
     env.filters['regex_replace'] = regex_replace
     env.filters['striptags_excerpt'] = striptags_excerpt
+    env.filters['md'] = lambda text: markdown.markdown(str(text))
 
     # Add current date to templates
     env.globals['now'] = datetime.now()

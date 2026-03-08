@@ -18,11 +18,10 @@ tags_file: "tags.yaml"
 # ── Display ───────────────────────────────────────────────────────────────────
 # date_format: "%B %d, %Y"   # strftime format for displayed dates
 # meta_delimiter: ""          # Separator between post date and tags (e.g. "::")
-# footer_text: ""             # First footer line (site-specific text)
-footer_credit: "Made with ❤️, powered by <a href=\"https://github.com/orioncrocker/dsssg\">dsssg</a>"
-# footer_links:               # Links shown in the right column of the footer
-#   - text: "Link Name"
-#     url: "/page"
+footer_left:                  # Markdown items for the left footer column
+  - "Made with ❤️, powered by [dsssg](https://github.com/orioncrocker/dsssg)"
+footer_right:               # Markdown items for the right footer column
+  - "[RSS](/rss.xml)"
 
 # ── Images ────────────────────────────────────────────────────────────────────
 # image_optimize: false       # Optimize images during build (requires Pillow)

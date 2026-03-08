@@ -132,9 +132,8 @@ All configuration lives in `config.yaml` (read from the current working director
 |-----|---------|-------------|
 | `date_format` | `"%Y-%m-%d"` | strftime format for displayed post dates |
 | `meta_delimiter` | `""` | Separator rendered between post date and tags (e.g. `"::"`) |
-| `footer_text` | `null` | *(optional)* First footer line (site-specific text) |
-| `footer_credit` | `null` | *(optional)* Second footer line (e.g. attribution) |
-| `footer_links` | `null` | *(optional)* List of `{text, url}` links rendered in the right footer column |
+| `footer_left` | `null` | *(optional)* List of Markdown strings rendered as blocks in the left footer column |
+| `footer_right` | `null` | *(optional)* List of Markdown strings rendered as blocks in the right footer column |
 
 ### Images
 
